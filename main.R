@@ -7,5 +7,6 @@ setwd("/Users/jakubkempa/Documents/5 Semestr/Pakiety statystyczne/Sprawozdanie1_
 #wpisz sobie swój path
 
 data = read_excel("dane.xlsx")
-view(data)
+# data = filter(data, )
 
+data %>% ggplot(aes(x=BodyweightKg, y=TotalKg))
