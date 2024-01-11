@@ -1,0 +1,17 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{tgpagella}
+\usepackage{hyperref}
+\author{Emil Olszewski, Jakub Kempa}
+\date{\today}
+\title{Sprawozdanie 1}
+
+\begin{document}
+\maketitle
+
+\section{Wstęp}
+
+W niniejszym sprawozdaniu analizie zostaną poddane dane dotyczące wyników konkurentów biorących udział w trójboju siłowym. Pochodzą ze strony \url{https://gitlab.com/openpowerlifting/opl-data}.
+
+\end{document}
