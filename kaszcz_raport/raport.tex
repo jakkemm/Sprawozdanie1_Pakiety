@@ -1,0 +1,470 @@
+\documentclass{article}
+\usepackage{polski}
+\usepackage{tgpagella}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[explicit]{titlesec}
+
+\usepackage[
+	left=1in, right=1in, top=.5in, bottom=.5in
+]{geometry}
+
+\hypersetup{
+colorlinks=true,
+urlcolor=blue
+}
+
+\graphicspath{
+	{../plots/}
+}
+
+
+\author{Emil Olszewski, Artur Sadurski}
+\date{\today}
+\title{Waga trójboisty a jego wyniki siłowe.\\ \large Komputerowa analiza szeregów czasowych \\ \large Raport 1. }
+
+
+\begin{document}
+\maketitle
+
+% ------------------- STRESZCZENIE --------------------------
+\begin{abstract}
+Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat 
+męskich trójboistów zrzeszonych w ramach federacji IPF. \href{https://gitlab.com/openpowerlifting/opl-data}{Dane} zostały udostępnione na warunkach licencji GNU AGPLv3. 
+Przeanalizowano zależność pomiędzy masą ciała zawodnika a jego wynikiem w kateogrii RAW w poszczególnych bojach tj. \textit{wyciskaniu na ławce}, \textit{przysiadzie ze sztangą} oraz \textit{martwym ciągu} jak i wyniku \textit{total} będącego sumą rezultatów z trzech wcześniej wymienionych bojów. Przedstawiono oraz opisano metody statystyczne jak i te z dziedziny regresji użyte do określenia zależności pomiędzy danymi. 
+W wyniku analizy zaobserwowano dodatnią korelację pomiędzy tymi zmiennymi, jednakże \textit{dobre} dopasowanie modelu liniowego uzyskano dopiero po transformacji logarytmicznej zmiennej niezależnej.   
+\end{abstract}
+
+\section{Aparatura}
+Do analizy danych użyto języka \textit{Julia} w wersji \textit{1.9.3} wraz z następującymi bibliotekami:
+\begin{itemize}
+\item \textbf{DataFrames.jl, Statistics.jl} - analiza danych.
+\item \textbf{Plots.jl} - wykresy i wizualizacja. 
+\item \textbf{GLM.jl} - model regresji liniowej. 
+\item \textbf{HypothesisTests.jl} - testy statystyczne. 
+\end{itemize}
+
+% ---------------- OPIS DANYCH --------------------
+\section{Opis danych} 
+Pod uwagę wzięto tylko zawodników płci męskiej, dla których dostępny był pełen zestaw danych dotyczący wyników uzyskanych w każdym z trzech bojów. Ograniczono się dodatkowo do cenzusu wiekowego w przedziale od 16 do 40 lat oraz rozpatrywano tylko wyniki uzyskane w kategorii RAW (kategoria, która zabrania używania sprzętu dającego przewagę mechaniczną np. koszulek do wyciskania, kaftanów itd. Jest to klasyczna kategoria trójboju siłowego). \\
+Skoncentrowano się na dwóch kluczowych zmiennych:
+
+    \begin{itemize}
+        \item \textbf{BodyweightKg (Masa ciała)}: Ta zmienna niezależna reprezentuje masę ciała zawodnika w kilogramach. Masa ciała jest istotnym parametrem w trójboju siłowym, ponieważ klasyfikuje zawodników w odpowiednie kategorie wagowe i może wpływać na ich wydajność w zawodach.
+        \item \textbf{TotalKg (Całkowity wynik)}: Jako zmienna zależna, całkowity wynik odnosi się do sumy maksymalnych ciężarów, które zawodnik podniósł w trzech próbach: przysiadzie, wyciskaniu leżąc i martwym ciągu. Jest to główny wskaźnik wydajności w trójboju siłowym, odzwierciedlający siłę i umiejętności zawodnika. W dalszej części raportu będziemy używać określeń takich jak \textbf{Wynik sumaryczny}, \textbf{Wynik total} czy po prostu \textbf{total}.
+    \end{itemize}
+     
+Ze względu na występujące powszechnie duplikaty zmiennej niezależnej wpierw uśredniono wartości zmiennej zależnej dla takiej samej wagi zawodnika tak, aby uzyskać jednoznaczność pomiędzy zbiorem zmiennych niezależnych i niezależnych. Następnie, aby pozbyć się szumu wygładzono dane metodą średniej ruchomej o oknie szerokości 9. Tym samym z początkowego zestawu danych o długości 107416 uzyskano próbkę długości 704. 
+
+% ---------------- ANALIZA JEDNOWYMIAROWA ZMIENNYCH ---------------------
+\section{Analiza jednowymiarowa zmiennej zależnej i niezależnej} 
+Na rysunku \ref{fig:rozkladyzmiennych} przedstawiono histogramy, zaś w tabeli \ref{tab:statystyki} podstawowe statystyki dla obu zmiennych.
+
+\begin{figure}[!htb]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{weight_hist.png}
+  \caption{Zmienna niezależna}
+  \label{fig:rozkladzmiennejniezal}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{total_hist.png}
+  \caption{Zmienna zależna}
+  \label{fig:rozkladzmiennejzal}
+\end{subfigure}
+\caption{Histogramy przedstawiające rozkłady zmiennych}
+\label{fig:rozkladyzmiennych}
+\end{figure}
+
+\begin{table}[!htb]
+  \centering
+   \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}|l|ccc|}
+    \toprule
+    \multirow{2}{*}{\textbf{Zmienna}} & \textbf{Niezależna} & \textbf{Zależna}& \\
+    \cline{2-3}
+    & \textbf{Masa Zawodnika} & \textbf{Wynik total} \\
+    \midrule
+    \textbf{Średnia} & $88,4$ & $525,6$&\\
+    \textbf{Mediana} & $86,4$ & $522,5$&\\
+    \textbf{Q1} & $74,6$ &  $457,5$&\\
+    \textbf{Q3} \quad \quad \quad \quad \quad \quad \quad \quad[kg] & $98,3$ & $592,5$&\\
+    \textbf{Minimum} & $37,9$ & $75,0$&\\
+    \textbf{Maksimum} & $285,0$ & $1110,0$&\\
+    \textbf{Odchylenie stand.} & $18,5$ & $106,1$&\\
+    \midrule
+    \textbf{Skośność} & $1.11$ & $0.12$&\\
+    \textbf{Kurtoza} (nadwyżkowa) & $2.65$ & $0.36$&\\
+    \bottomrule
+  \end{tabular*}
+  \caption{Statystyki dla Masy Zawodnika i Wyniku Total}
+  \label{tab:statystyki}
+\end{table}
+
+Przy analizie powyższych statystyk warto zwrócić szczególną uwagę na dwie ostatnie, czyli \textbf{skośność} i \textbf{kurtozę}. Prawostronna skośność zmiennej niezależnej ma proste wyjaśnienie. W zawodach trójbojowych celem wyrównania szans zawodników o różnej budowie ciała i predyspozycjach stosuje się kategorie wagowe. W większości tego typu zawodów ostatnią kategorią wagową jest kategoria typu \textit{120+}. Zawodnicy kwalifikujący się do tej kategorii będą dążyli do zwiększania swojej masy ciała (zakładając dodatnie skorelowanie masy z wynikami), gdyż nie grozi im wpadnięcie do wyższej kategorii wagowej. Tym samym obserwujemy prawostronną skośność w rozkładzie masy ciała zawodników.\\
+
+% ---------------- ANALIZA ZALEŻNOŚCI LINIOWEJ ---------------------
+\section{Analiza zależności liniowej pomiędzy zmienną zależną i niezależną}
+\subsection{Metoda średniej ruchomej (Moving Average)}
+Średnia ruchoma jest techniką wygładzania danych, która polega na obliczaniu średniej z określonej liczby kolejnych wartości z serii czasowej. Jest to powszechnie stosowana metoda do usuwania krótkoterminowych fluktuacji i uwydatniania długoterminowych trendów lub cykli.
+
+\subsubsection{Prosta średnia ruchoma (SMA)}
+\[SMA_t = \frac{1}{n}\sum_{i=t-n+1}^{t}\hat{y}_i\]
+gdzie \(SMA_t\) to średnia ruchoma w czasie \(t\), \(n\) to rozmiar okna, a \(\hat{y}_i\) to wartości serii.
+
+
+\subsubsection{Zastosowanie w analizie}
+Średnia ruchoma może być używana do wygładzenia szeregów czasowych przed przeprowadzeniem dalszej analizy, takiej jak estymacja trendów czy sezonowości. Pomaga również w redukcji efektu przypadkowych wahań danych i w wizualizacji ogólnego kierunku zmian w danych.
+
+\subsubsection{Wybór rozmiaru okna}
+Rozmiar okna \(n\) ma znaczący wpływ na wyniki wygładzania. Zbyt małe okno może nie wyeliminować wszystkich niepożądanych fluktuacji, podczas gdy zbyt duże może spowodować zbytnie zatarcie użytecznych informacji. Wybór optymalnego rozmiaru okna zależy od charakterystyki danych oraz celu analizy.
+
+
+
+\subsection{Klasyczny model regresji liniowej}
+Model regresji liniowej to prosty, lecz potężny model statystyczny służący do przewidywania wartości zmiennej zależnej \(Y\) na podstawie wartości zmiennej niezależnej \(X\). Matematycznie, klasyczny model regresji liniowej wyraża się wzorem:
+\[ Y_i = \beta_0 + \beta_1x_i + \epsilon_i \]
+gdzie:
+\begin{itemize}
+    \item \(Y_i\) to wartość zmiennej zależnej dla \(i\)-tej obserwacji.
+    \item \(x_i\) to wartość zmiennej niezależnej dla \(i\)-tej obserwacji.
+    \item \(\beta_0\) to wyraz wolny (intercept).
+    \item \(\beta_1\) to współczynnik kierunkowy (slope).
+    \item \(\epsilon_i\) to błąd losowy dla \(i\)-tej obserwacji.
+\end{itemize}
+Założenia tego modelu to:
+\begin{itemize}
+    \item Liniowość względem parametrów.
+    \item \(E(\epsilon_i) = 0\): średnia wartość błędu losowego jest równa 0 dla wszystkich \(i\).
+    \item \(Var(\epsilon_i) = \sigma^2\): stała wariancja błędów dla wszystkich obserwacji.
+    \item \(Cov(\epsilon_i, \epsilon_j) = 0\) dla \(i \neq j\): błędy są niezależne między obserwacjami.
+    \item Opcjonalnie, \(\epsilon_i\) ma rozkład normalny, co nie jest konieczne, ale często przyjmowane dla uproszczenia.
+\end{itemize}
+
+\subsection{Metoda najmniejszych kwadratów (MNK)}
+Metoda najmniejszych kwadratów (MNK) to technika estymacji parametrów w modelu regresji, która minimalizuje sumę kwadratów różnic między obserwowanymi a modelowanymi wartościami zmiennej zależnej. Funkcja kosztu, którą minimalizujemy, wyraża się wzorem:
+\[ S(\beta_0, \beta_1) = \sum_{i=1}^{n} (y_i - \hat{y_i})^2 \]
+gdzie \( \hat{y_i} = \beta_0 + \beta_1x_i \) to wartości przewidywane przez model.
+
+\subsection{Estymacja punktowa}
+W estymacji punktowej chcemy znaleźć konkretne wartości \( \hat{\beta}_0 \) i \( \hat{\beta}_1 \), które najlepiej pasują do naszych danych:
+\[ \hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2} \]
+\[ \hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x} \]
+gdzie \( \bar{x} \) i \( \bar{y} \) to średnie wartości odpowiednio zmiennej niezależnej i zależnej.
+
+\subsection{Estymacja przedziałowa}
+W kontekście klasycznego modelu regresji liniowej, estymacja przedziałowa jest wykorzystywana do określenia przedziałów ufności dla estymatorów \(\hat{\beta}_0\) i \(\hat{\beta}_1\). Dodatkowo, zakładając normalność składników losowych \(\epsilon_i\) z średnią 0 i wariancją \(\sigma^2\), możemy wykorzystać te założenia do konstrukcji przedziałów ufności.
+
+\subsubsection{Rozkład estymatorów}
+Załóżmy, że \(\epsilon_i \sim N(0, \sigma^2)\). Wówczas estymatory \(\hat{\beta}_0\) i \(\hat{\beta}_1\), obliczone metodą najmniejszych kwadratów, również mają rozkłady normalne:
+\[\hat{\beta}_1 \sim N\left(\beta_1, \frac{\sigma^2}{\sum_{i=1}^{n}(x_i-\bar{x})^2}\right)\]
+\[\hat{\beta}_0 \sim N\left(\beta_0, \sigma^2\left(\frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^{n}(x_i-\bar{x})^2}\right)\right)\]
+
+\subsubsection{Estymator wariancji składnika losowego}
+Nie znając prawdziwej wartości \(\sigma^2\), estymujemy ją przy pomocy:
+\[s^2 = \frac{\sum_{i=1}^{n}(Y_i - \hat{Y}_i)^2}{n-2}\]
+gdzie \(s^2\) jest estymatorem nieobciążonym wariancji \(\sigma^2\), a \(\hat{Y}_i\) to wartości przewidywane przez model.
+
+\subsubsection{Statystyki do wyznaczenia przedziałów ufności}
+Dla konstrukcji przedziałów ufności dla \(\hat{\beta}_1\) i \(\hat{\beta}_0\), korzystamy ze statystyk:
+\[T_1 = \frac{\hat{\beta}_1 - \beta_1}{SE(\hat{\beta}_1)} \sim t(n-2)\]
+\[T_0 = \frac{\hat{\beta}_0 - \beta_0}{SE(\hat{\beta}_0)} \sim t(n-2)\]
+gdzie \(SE(\hat{\beta}_1)\) i \(SE(\hat{\beta}_0)\) to standardowe błędy estymatorów, a \(t(n-2)\) to rozkład t-Studenta z \(n-2\) stopniami swobody.
+
+\subsubsection{Przedziały ufności}
+\label{subsec:confint}
+Przedziały ufności dla \(\beta_1\) i \(\beta_0\) na poziomie ufności \(1 - \alpha\) są dane jako:
+\[\hat{\beta}_1 \pm t_{\alpha/2, n-2} \cdot SE(\hat{\beta}_1)\]
+\[\hat{\beta}_0 \pm t_{\alpha/2, n-2} \cdot SE(\hat{\beta}_0)\]
+gdzie \(t_{\alpha/2, n-2}\) to wartość krytyczna z rozkładu t-Studenta odpowiadająca poziomowi ufności \(1 - \alpha\).
+
+Przy pomocy tych przedziałów możemy stwierdzić, z określonym poziomem ufności, gdzie spodziewamy się znaleźć rzeczywiste wartości \(\beta_1\) i \(\beta_0\). Te przedziały dają nam lepszy wgląd w niepewność związaną z naszymi estymacjami i są kluczowe w statystycznej interpretacji wyników modelu regresji liniowej.
+
+\subsection{Zastosowanie do zestawu danych}
+\begin{figure}[!htb]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{unsmoothed.png}
+  \caption{Przed wygładzeniem MA}
+  \label{fig:przedma}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{weight_vs_total.png}
+  \caption{Po wygładzeniu MA}
+  \label{fig:poma}
+\end{subfigure}
+\caption{Wykresy rozproszenia danych. Wraz ze wzrostem wagi obserwujemy coraz większe rozproszenie oraz wypłaszczenie się wykresu.}
+\label{fig:rozproszenieprzedtrans}
+\end{figure}
+
+
+\begin{figure}[!h]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{log_hypo_with_model.png}
+  \caption{Transformacja logaryt. zmiennej niezależnej.}
+  \label{fig:logarytmiczne}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{power_hypo_with_model.png}
+  \caption{Transformacja logaryt. obu zmiennych.}
+  \label{fig:potegowa}
+\end{subfigure}
+\caption{Wykresy rozproszeń wraz z dopasowanymi modelami regresji liniowej metodą najmniejszych kwadratów.}
+\label{fig:transformacje}
+\end{figure}
+
+Na rysunku \ref{fig:przedma} przestawiony został wykres rozproszenia danych przed wygładzeniu średnią ruchomą. Na rysunku \ref{fig:poma} zaś po. 
+Jak widać zależność pomiędzy badanymi zmiennymi jest wklęsła, co świadczy o tym, że nie powinniśmy dopasowywać do niej modelu liniowego. Można zakładać logarytmiczną bądź potęgową zależność pomiędzy danymi. Dla obu hipotez wykonano odpowiednie wkyresy przedstawione na rysunku \ref{fig:transformacje}. Na wykresie \ref{fig:logarytmiczne} zakładamy, że pomiędzy danymi występuje zależność logarytmiczna, a więc celem \textit{wyprostowania} danych stosujemy transformację logarytmiczną (konkretnie logarytm dziesiętny) tylko na zmiennej niezależnej. Na wykresie \ref{fig:potegowa} zakładmy zaś, że między zmiennymi występuje zależność potęgowa. Tym samym logarytmujemy obie zmienne. 
+
+
+Współczynniki determinacji (opisane szczegółowo w \ref{subsec:determinacja}) dla \ref{fig:logarytmiczne} oraz \ref{fig:potegowa} wynoszą odpowiednio $ 0,83 $ oraz $ 0,78 $. Tym samym pozostaniemy przy transformacji logarytmicznej tylko zmiennej niezależnej. \\ 
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{transformed_sample_plot.png}
+  \caption{Wykres rozproszenia danych po transformacji i usunięciu wartości odstających.}
+  \label{fig:poodrzuceniu}
+\end{figure}
+
+\subsection{Usunięcie wartości odstających}
+Aby jeszcze lepiej dopasować model do danych dokonamy usunięcia wartości odstających. W tym celu dokonamy \textbf{standaryzacji Z}. Polega ona na obliczeniu statystyki 
+$$ z = \frac{x - \mu}{\sigma} $$, gdzie $\mu$ jest średnią z populacji, a $\sigma$ odchyleniem standardowym. Standaryzacje tą wykonamy dla residuów. Zgodnie z wynikami z sekcji \ref{sec:residuum} residua mają rozkład normalny, więc statystyka $z$ ma standardowy rozkład normalny. Odrzucimy wszelkie obserwacje, dla których $|z| > 3$ kierując się zasadą 3 sigm. Dopasowanie modelu po odrzuceniu obserwacji odstających zostało przedstawione na wykresie \ref{fig:poodrzuceniu}.
+
+\subsection{Ocena poziomu zależności}
+
+\subsubsection{Współczynnik korelacji Pearsona}
+Współczynnik korelacji Pearsona (\(r\)) jest miarą siły i kierunku związku liniowego między dwoma zmiennymi. Wartość \(r\) mieści się w przedziale od -1 do 1, gdzie 1 oznacza idealną korelację dodatnią, -1 idealną korelację ujemną, a 0 brak liniowej zależności. Wzór na \(r\) wygląda następująco:
+
+\[ r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^2 \sum_{i=1}^{n}(y_i - \bar{y})^2}} \]
+
+gdzie:
+- \(x_i\) i \(y_i\) to indywidualne wartości dwóch zmiennych.
+- \(\bar{x}\) i \(\bar{y}\) to średnie wartości odpowiednich zmiennych.
+
+\subsubsection{Suma kwadratów całkowita (SST)}
+SST (Total Sum of Squares) mierzy całkowitą zmienność w danych związanych z zmienną zależną \(Y\). Jest to suma kwadratów różnic między obserwowanymi wartościami zmiennej zależnej a ich średnią wartością. Można to zapisać jako:
+
+\[ SST = \sum_{i=1}^{n} (y_i - \bar{y})^2 \]
+
+SST jest używana jako punkt odniesienia do oceny, jak dużo zmienności w zmiennej zależnej jest wyjaśnione przez model.
+
+\subsubsection{Suma kwadratów błędów (SSE)}
+SSE (Sum of Squares due to Error) mierzy ilość zmienności w danych, która nie jest wyjaśniona przez model. Jest to suma kwadratów różnic między obserwowanymi wartościami zmiennej zależnej a wartościami przewidywanymi przez model:
+
+\[ SSE = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]
+
+gdzie \(\hat{y}_i\) to wartości przewidywane przez model.
+
+\subsubsection{Suma kwadratów regresji (SSR)}
+SSR (Sum of Squares due to Regression) mierzy ilość zmienności w zmiennej zależnej, która jest wyjaśniona przez model. Matematycznie jest to różnica między SST a SSE:
+
+\[ SSR = SST - SSE \]
+
+lub równoważnie, jest to suma kwadratów różnic między wartościami przewidywanymi przez model a średnią wartością zmiennej zależnej:
+
+\[ SSR = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2 \]
+
+
+Te trzy statystyki - SST, SSE i SSR - są kluczowe do oceny dopasowania modelu regresji, umożliwiając zrozumienie, ile zmienności w danych jest wyjaśnione przez model, a ile pozostaje niewyjaśnione.
+
+\subsubsection{Współczynnik determinacji ($R^2$)}
+\label{subsec:determinacja}
+Aby ująć trzy powyższe statystyki w jedną stosuje się współczynnik $R^2$ dany wzorem 
+$$ R^2 = \frac{SSR}{SSE} = 1 - \frac{SSE}{SST} $$.
+
+Współczynnik determinacji przyjmuje wartości z zakresu $[0, 1]$ oraz mówi jak dobrze dobrany model opisuje zależność między danymi. Wartości bliskie $0$ świadczą o tym, że rozrzut residuów jest taki sam co danych, a tym samym model nic nie wnosi. W wyidealizowanym przypadku, gdy $R^2 = 1$, model przedstawia dokładną zależność między danymi.
+
+\subsection{Miary dopasowania dla zestawu danych}
+% Miary dopasowania modelu 
+Dla modelu z rysunku \ref{fig:poodrzuceniu} otrzymujemy następujące miary dopasowania. 
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{|cccc|}
+    \toprule
+    \textbf{Współczynnik korelacji Pearsona} & \multirow{2}{*}{\textbf{SSE}} & \multirow{2}{*}{\textbf{SST}} & \textbf{Współczynnik determinacji} \\
+    $R_{XY}$ & & & $R^2$ \\
+    \midrule
+    % Add your data here
+     $0,94$ & $676892$ & $5871410$ & $0.88$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Miary dopasowania modelu}
+  \label{tab:statistics}
+\end{table}
+
+Jak widać dzięki współczynnikowi $R_{XY}$ po wszystkich transformacjach uzyskujemy ewidentną zależność liniową między danymi, zaś współczynnik $R^2$ mówi nam, że udało się dopasować do nich \textit{dobry} model.
+
+\subsection{Przedziały ufności}
+Dopasowanie modelu do danych metodą najmniejszych kwadratów zwraca estymatory 
+$$ \hat{\beta_0} = -795,27 \quad \hat{\beta_1} = 679,15 $$. 
+Korzystając ze wzorów wyznaczonych w \ref{subsec:confint} otrzymujemy przedziały ufności
+$$ \hat{\beta_0} \in [-831,91; -758,63] \quad \hat{\beta_1} \in [660,58; 697,72] $$. Model regresji liniowej wraz z przedziałem ufności został przedstawiony na wykresie \ref{fig:przedzialufnosci}.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{transformed_sample_plot_with_ci.png}
+  \caption{Wykres rozproszenia danych wraz z modelem regresji liniowej i przedziałem ufności.}
+  \label{fig:przedzialufnosci}
+\end{figure}
+% ---------------- ANALIZA RESIUDuÓW -----------------
+\section{Analiza residuów} 
+\label{sec:residuum}
+
+Analiza residuów jest kluczowym elementem oceny dopasowania modelu regresji liniowej. Residua, czyli różnice między obserwowanymi wartościami zmiennej zależnej a wartościami przewidywanymi przez model, dostarczają informacji o adekwatności modelu oraz o założeniach leżących u jego podstaw. Sprawdzenie następujących założeń jest istotne:
+
+\subsection{Średnia równa zero}
+Założenie to mówi, że średnia residuów powinna być równa zero (\(E(\epsilon_i) = 0\)). Oznacza to, że model nie systematycznie nie przewiduje ani nie niedoszacowuje wartości zmiennej zależnej. Z metody najmniejszych kwadratów wynika, że suma residuów jest równa zero, co prowadzi do wniosku, że ich średnia też jest równa zero, pod warunkiem, że model zawiera wyraz wolny.
+
+\subsection{Stała wariancja (Homoskedastyczność)}
+Stała wariancja residuów, znana jako homoskedastyczność, oznacza, że wariancja błędów jest stała dla wszystkich poziomów wartości zmiennej niezależnej. W praktyce oznacza to, że rozrzut residuów wokół linii regresji jest mniej więcej jednakowy niezależnie od wartości zmiennej niezależnej. Niestety, metoda najmniejszych kwadratów nie gwarantuje homoskedastyczności.
+
+\subsection{Niezależność residuów}
+Niezależność residuów od siebie jest kluczowa dla wiarygodności modelu regresji. W szczególności oznacza to, że wartości błędu dla jednej obserwacji nie są zależne od wartości błędu dla innej obserwacji. Niezależność residuów można sprawdzić poprzez analizę funkcji autokorelacji.
+
+\subsection{Rozkład normalny}
+Ostatnie założenie dotyczy rozkładu residuów, które powinny mieć rozkład normalny, szczególnie w małych próbach. Dzięki temu można stosować różnego rodzaju testy statystyczne, które zakładają normalność. Rozkład normalny residuów można zweryfikować za pomocą różnych testów statystycznych czy analizy wykresów kwantylowych (Q-Q plot).
+
+\subsubsection{Teoretyczne uzasadnienie zerowej średniej residuów w estymacji metodą najmniejszych kwadratów}
+
+W kontekście prostego modelu regresji liniowej, nasz model przedstawia się następująco:
+
+\[ Y_i = \beta_0 + \beta_1X_i + \epsilon_i \]
+
+Tutaj \(Y_i\) to obserwowane wartości, \(X_i\) to wartości zmiennej niezależnej, \(\beta_0\) i \(\beta_1\) to parametry, a \(\epsilon_i\) reprezentuje reszty, czyli różnice pomiędzy wartościami obserwowanymi a wartościami przewidywanymi przez nasz model:
+
+\[ \epsilon_i = Y_i - \hat{Y_i} \]
+\[ \epsilon_i = Y_i - (\hat{\beta}_0 + \hat{\beta}_1X_i) \]
+
+Metoda najmniejszych kwadratów (MNK) ma na celu znalezienie estymatora parametrów (\(\hat{\beta}_0\) i \(\hat{\beta}_1\)), które minimalizują sumę kwadratów residuów:
+
+\[ S(\hat{\beta}_0, \hat{\beta}_1) = \sum_{i=1}^{n} \epsilon_i^2 = \sum_{i=1}^{n} (Y_i - \hat{\beta}_0 - \hat{\beta}_1X_i)^2 \]
+
+Aby znaleźć minimum \(S\), obliczamy pochodne cząstkowe względem \(\hat{\beta}_0\) i \(\hat{\beta}_1\) i przyrównujemy je do zera.
+
+\[ \frac{\partial S}{\partial \hat{\beta}_0} = -2 \sum_{i=1}^{n} (Y_i - \hat{\beta}_0 - \hat{\beta}_1X_i) = 0 \]
+\[ \frac{\partial S}{\partial \hat{\beta}_1} = -2 \sum_{i=1}^{n} X_i(Y_i - \hat{\beta}_0 - \hat{\beta}_1X_i) = 0 \]
+
+Z pierwszego równania:
+
+\[ \sum_{i=1}^{n} Y_i - n\hat{\beta}_0 - \hat{\beta}_1\sum_{i=1}^{n}X_i = 0 \]
+\[ n\hat{\beta}_0 = \sum_{i=1}^{n} Y_i - \hat{\beta}_1\sum_{i=1}^{n}X_i \]
+\[ \hat{\beta}_0 = \frac{1}{n}\sum_{i=1}^{n} Y_i - \hat{\beta}_1\bar{X} \]
+
+Wstawiając \(\hat{\beta}_0\) z powrotem do definicji residuów:
+
+\[ \epsilon_i = Y_i - \left(\frac{1}{n}\sum_{i=1}^{n} Y_i - \hat{\beta}_1\bar{X} + \hat{\beta}_1X_i\right) \]
+
+Sumując wszystkie reszty po wszystkich \(i\):
+
+\[ \sum_{i=1}^{n} \epsilon_i = \sum_{i=1}^{n} Y_i - n\left(\frac{1}{n}\sum_{i=1}^{n} Y_i\right) + \hat{\beta}_1\sum_{i=1}^{n}(X_i - \bar{X}) \]
+
+Zauważając, że \(\sum_{i=1}^{n} (X_i - \bar{X}) = 0\), termin z \(\hat{\beta}_1\) znika:
+
+\[ \sum_{i=1}^{n} \epsilon_i = \sum_{i=1}^{n} Y_i - \sum_{i=1}^{n} Y_i = 0 \]
+
+Co oznacza, że suma residuów jest równa zero, co implikuje, że ich średnia również wynosi zero:
+
+\[ \frac{1}{n}\sum_{i=1}^{n} \epsilon_i = 0 \]
+
+To wyprowadzenie pokazuje, że z natury metody najmniejszych kwadratów wynika, iż średnia residuów jest koniecznie równa zero, co umacnia założenie, że nasz model nie przewiduje systematycznie ani nie niedoszacowuje zmiennej zależnej.
+
+\subsection{Test Andersona-Darlinga}
+
+Test Andersona-Darlinga jest jednym z testów statystycznych używanych do oceny, czy próbka danych pochodzi z populacji o określonym rozkładzie, najczęściej normalnym. Test ten jest modyfikacją testu Kołmogorowa-Smirnowa i jest bardziej czuły na obserwacje znajdujące się w ogonach rozkładu.
+
+\subsubsection{Założenia i formuła}
+
+Założenie podstawowe testu to hipoteza zerowa, która mówi, że dane pochodzą z populacji o rozkładzie normalnym. Test porównuje empiryczną funkcję dystrybuanty (ECDF) z teoretyczną funkcją dystrybuanty rozkładu normalnego. Jego statystyka testowa wyraża się wzorem:
+
+\[ A^2 = n\int_{-\infty}^{\infty} \frac{(F_n(x) - F(x))^2}{F(x)(1-F(x))}dF(x) \]
+
+gdzie \(F_n(x)\) to empiryczna funkcja dystrybuanty z próbki, \(F(x)\) to teoretyczna funkcja dystrybuanty rozkładu normalnego, a \(n\) to rozmiar próbki.
+
+\subsubsection{Interpretacja}
+
+Wartość statystyki testowej \(A^2\) jest następnie porównywana z wartościami krytycznymi dla danego poziomu istotności. Jeśli statystyka testowa przekracza wartość krytyczną, hipoteza zerowa jest odrzucana, co sugeruje, że dane nie pochodzą z rozkładu normalnego. Test Andersona-Darlinga jest szczególnie wrażliwy na odchylenia od normalności w ogonach rozkładu, co jest jedną z jego głównych zalet.
+
+\subsection{Test Jarque-Bera}
+
+Test Jarque-Bera to test statystyczny używany do sprawdzania, czy dane mają skośność i kurtozę odpowiadające rozkładowi normalnemu. Test ten jest popularny w ekonometrii i innych dziedzinach, które zakładają normalność residuów w modelach regresji.
+
+\subsubsection{Założenia i formuła}
+
+Test Jarque-Bera opiera się na skośności (ang. skewness) i kurtozie (ang. kurtosis) danych. Skośność jest miarą asymetrii rozkładu, a kurtoza mierzy „ostrość” rozkładu lub grubość jego ogonów. Hipoteza zerowa testu Jarque-Bera mówi, że dane mają skośność równą 0 i kurtozę równą 3 (charakterystyczną dla rozkładu normalnego). Statystyka testowa JB wyraża się wzorem:
+
+\[ JB = \frac{n}{6}(S^2 + \frac{(K-3)^2}{4}) \]
+
+gdzie \(n\) to liczba obserwacji, \(S\) to skośność próbki, a \(K\) to kurtoza próbki.
+
+\subsubsection{Interpretacja}
+
+Wartość statystyki JB jest następnie porównywana z wartościami krytycznymi chi-kwadrat z dwoma stopniami swobody. Jeżeli wartość statystyki JB jest znacząco wysoka, hipoteza zerowa o normalności rozkładu jest odrzucana. Test Jarque-Bera jest szeroko stosowany do badania normalności residuów w modelach regresji liniowej i jest szczególnie użyteczny w dużych próbach, gdzie jego moc jest wysoka.
+
+Oba testy, Andersona-Darlinga i Jarque-Bera, są istotnymi narzędziami w statystycznej analizie danych, pozwalającymi ocenić zgodność danych z rozkładem normalnym, co jest kluczowym założeniem w wielu modelach statystycznych i ekonometrycznych.
+
+
+\subsection{Analiza residuów dla zestawu danych}
+Rozkład residuów dla rozpatrywanych danych został przedstawiony na wykresie \ref{fig:residuaboxplot}, zaś statystyki opisujące kluczowe cechy tego rozkładu w tabeli \ref{tab:residuastatystyki}.  Jak widać mamy doczynienia z zerową średnią oraz bliską zera skośnością oraz kurtozą. Tym samym można wysunąć hipotezę o normalności rozkładu. W celu przetestowania tej hipotezy przeciwko hipotezie alternatywnej (residua nie pochodzą z rozkładu normalnego) wykonamy test Jarque-Bera oraz Andersona-Darlinga. Wyniki testów przedstawione są na wykresie \ref{fig:testy}. Oba testy nie odrzuciły hipotezy alternatywnej, więc mamy przesłanki aby sądzić, że residua mają rozkład normalny.
+
+
+ 
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{residuals_boxplot.png}
+  \caption{Rozkład residuów.}
+  \label{fig:residuaboxplot}
+\end{figure}
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{|cccc|}
+    \toprule
+    \textbf{Średnia} & \textbf{Odchylenie standardowe} & \textbf{Skośność} & \textbf{Kurtoza} \\
+    \midrule
+    % Add your data here
+     $0.00$ & $32.97$ & $-0.18$ & $0.26$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Statystyki rozkładu residuów}
+  \label{tab:residuastatystyki}
+\end{table}
+
+
+\begin{figure}[!htb]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{jbtest.png}
+  \caption{Jarque-Bara}
+  \label{fig:jb}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{adtest.png}
+  \caption{Anderson-Darling}
+  \label{fig:ad}
+\end{subfigure}
+\caption{Wyniki testów statystycznych Jarque-Bara i Andersona-Darlinga wykonanych przy pomocy pakietu \textit{HypothesisTests.jl} języka \textit{Julia}}
+\label{fig:testy}
+\end{figure}
+
+
+% ---------------- PODSUMOWANIE -------------------
+\section{Podsumowanie i wnioski}
+W wyniku analizy udało nam się odpasować zależność logarytmiczną między danymi daną wzorem
+$$ \hat{y} = -795,27 + 679,15\, \text{log}_{10}(x)$$ oraz ustalić przedziały ufności dla odpowiednich współczynników. Dodatkowo nie znaleźliśmy przesłanek ku odrzuceniu hipotezy o normalności residuów co jest kolejną oznaką słuszności dopasowania. Powyższe wyniki prowadzą do konkluzji, że istnieje dodatnia korelacja pomiędzy wynikami w trójboju siłowym a masą zawodnika. 
+\end{document}

@@ -1,0 +1,40 @@
+\BOOKMARK [1][-]{section.1}{Aparatura}{}% 1
+\BOOKMARK [1][-]{section.2}{Opis danych}{}% 2
+\BOOKMARK [1][-]{section.3}{Analiza jednowymiarowa zmiennej zaleznej i niezaleznej}{}% 3
+\BOOKMARK [1][-]{section.4}{Analiza zaleznosci liniowej pomiedzy zmienna zalezna i niezalezna}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Metoda sredniej ruchomej \(Moving Average\)}{section.4}% 5
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Prosta srednia ruchoma \(SMA\)}{subsection.4.1}% 6
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Zastosowanie w analizie}{subsection.4.1}% 7
+\BOOKMARK [3][-]{subsubsection.4.1.3}{Wyb\363r rozmiaru okna}{subsection.4.1}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Klasyczny model regresji liniowej}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Metoda najmniejszych kwadrat\363w \(MNK\)}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.4}{Estymacja punktowa}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.5}{Estymacja przedzia\233owa}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.5.1}{Rozk\233ad estymator\363w}{subsection.4.5}% 13
+\BOOKMARK [3][-]{subsubsection.4.5.2}{Estymator wariancji sk\233adnika losowego}{subsection.4.5}% 14
+\BOOKMARK [3][-]{subsubsection.4.5.3}{Statystyki do wyznaczenia przedzia\233\363w ufnosci}{subsection.4.5}% 15
+\BOOKMARK [3][-]{subsubsection.4.5.4}{Przedzia\233y ufnosci}{subsection.4.5}% 16
+\BOOKMARK [2][-]{subsection.4.6}{Zastosowanie do zestawu danych}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.7}{Usuniecie wartosci odstajacych}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.8}{Ocena poziomu zaleznosci}{section.4}% 19
+\BOOKMARK [3][-]{subsubsection.4.8.1}{Wsp\363\233czynnik korelacji Pearsona}{subsection.4.8}% 20
+\BOOKMARK [3][-]{subsubsection.4.8.2}{Suma kwadrat\363w ca\233kowita \(SST\)}{subsection.4.8}% 21
+\BOOKMARK [3][-]{subsubsection.4.8.3}{Suma kwadrat\363w b\233ed\363w \(SSE\)}{subsection.4.8}% 22
+\BOOKMARK [3][-]{subsubsection.4.8.4}{Suma kwadrat\363w regresji \(SSR\)}{subsection.4.8}% 23
+\BOOKMARK [3][-]{subsubsection.4.8.5}{Wsp\363\233czynnik determinacji \(R2\)}{subsection.4.8}% 24
+\BOOKMARK [2][-]{subsection.4.9}{Miary dopasowania dla zestawu danych}{section.4}% 25
+\BOOKMARK [2][-]{subsection.4.10}{Przedzia\233y ufnosci}{section.4}% 26
+\BOOKMARK [1][-]{section.5}{Analiza residu\363w}{}% 27
+\BOOKMARK [2][-]{subsection.5.1}{Srednia r\363wna zero}{section.5}% 28
+\BOOKMARK [2][-]{subsection.5.2}{Sta\233a wariancja \(Homoskedastycznosc\)}{section.5}% 29
+\BOOKMARK [2][-]{subsection.5.3}{Niezaleznosc residu\363w}{section.5}% 30
+\BOOKMARK [2][-]{subsection.5.4}{Rozk\233ad normalny}{section.5}% 31
+\BOOKMARK [3][-]{subsubsection.5.4.1}{Teoretyczne uzasadnienie zerowej sredniej residu\363w w estymacji metoda najmniejszych kwadrat\363w}{subsection.5.4}% 32
+\BOOKMARK [2][-]{subsection.5.5}{Test Andersona-Darlinga}{section.5}% 33
+\BOOKMARK [3][-]{subsubsection.5.5.1}{Za\233ozenia i formu\233a}{subsection.5.5}% 34
+\BOOKMARK [3][-]{subsubsection.5.5.2}{Interpretacja}{subsection.5.5}% 35
+\BOOKMARK [2][-]{subsection.5.6}{Test Jarque-Bera}{section.5}% 36
+\BOOKMARK [3][-]{subsubsection.5.6.1}{Za\233ozenia i formu\233a}{subsection.5.6}% 37
+\BOOKMARK [3][-]{subsubsection.5.6.2}{Interpretacja}{subsection.5.6}% 38
+\BOOKMARK [2][-]{subsection.5.7}{Analiza residu\363w dla zestawu danych}{section.5}% 39
+\BOOKMARK [1][-]{section.6}{Podsumowanie i wnioski}{}% 40
