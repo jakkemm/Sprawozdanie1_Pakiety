@@ -10,8 +10,16 @@
 \begin{document}
 \maketitle
 
-\section{Wstęp}
+% ------------------- STRESZCZENIE --------------------------
+\begin{abstract}
 
-W niniejszym sprawozdaniu analizie zostaną poddane dane dotyczące wyników konkurentów biorących udział w trójboju siłowym. Pochodzą ze strony \url{https://gitlab.com/openpowerlifting/opl-data}.
+Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat 
+męskich trójboistów zrzeszonych w ramach federacji IPF. \href{https://gitlab.com/openpowerlifting/opl-data}{Dane} zostały udostępnione na warunkach licencji GNU AGPLv3. 
+Głównymi zmiennymi, które będą nas interesować będą \textit{Age}, \textit{Sex} (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe \textit{Best3BenchKg}, \textit{Best3SquatKg}, \textit{Best3DeadliftKg} i \textit{TotalKg}, które wyrażają wyniki w poszczególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+
+\end{abstract}
+
+%\section{Aparatura}
+Do analizy danych użyto języka \textit{R}.
 
 \end{document}

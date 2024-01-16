@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.4)  11 JAN 2024 14:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.4)  16 JAN 2024 12:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -366,41 +366,28 @@ LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <8> on input line 62.
 LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <6> on input line 62.
-LaTeX Font Info:    Trying to load font information for OT4+cmtt on input line 
-65.
-
-(/usr/local/texlive/2023/texmf-dist/tex/latex/polski/ot4cmtt.fd
-File: ot4cmtt.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
-)
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <10> on input line 65.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <7> on input line 65.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <5> on input line 65.
  [1
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2023/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}{/usr/local/texliv
-e/2023/texmf-dist/fonts/enc/dvips/pl/pltt.enc}] (./Sprawozdanie.aux)
+al/texlive/2023/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}] (./Sprawozdanie.
+aux)
 Package rerunfilecheck Info: File `Sprawozdanie.out' has not changed.
-(rerunfilecheck)             Checksum: 8C9D7E943D987CA081686106D4F6D92E;71.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 9146 strings out of 476025
- 145660 string characters out of 5790017
- 1853388 words of memory out of 5000000
- 29458 multiletter control sequences out of 15000+600000
- 534263 words of font info for 57 fonts, out of 8000000 for 9000
+ 9097 strings out of 476025
+ 144974 string characters out of 5790017
+ 1854388 words of memory out of 5000000
+ 29422 multiletter control sequences out of 15000+600000
+ 528177 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 63i,6n,67p,295b,431s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/pl/pltt10.pfb></usr/lo
-cal/texlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/te
-xlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb>
-Output written on Sprawozdanie.pdf (1 page, 105002 bytes).
+ 63i,6n,67p,435b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></us
+r/local/texlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on Sprawozdanie.pdf (1 page, 99955 bytes).
 PDF statistics:
- 36 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
- 3 named destinations out of 1000 (max. 500000)
- 9 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 25 PDF objects out of 1000 (max. 8388607)
+ 17 compressed objects within 1 object stream
+ 2 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
