@@ -2,5 +2,5 @@
 .vscode
 .RData
 .Rproj.user
-Sprawozdanie1_Pakiety.Rproj
+*.Rproj
 .Rhistory
