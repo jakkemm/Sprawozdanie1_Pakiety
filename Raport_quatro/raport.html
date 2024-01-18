@@ -113,8 +113,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="wstęp" class="level1">
 <h1>1. Wstęp</h1>
 <p>Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. <a href="https://gitlab.com/openpowerlifting/opl-data">Dane</a> zostały udostępnione na warunkach licencji <strong>GNU AGPLv3.</strong> Głównymi zmiennymi, które będą nas interesować są <strong>AgeClass, Sex</strong> (zmienne kategoryczne określające przedział wiekowy zawodnika oraz jego płeć) oraz zmienne ciągłe <strong>BodyweightKg, TotalKg,</strong> które wyrażają masę ciała zawodnika, oraz wynik całkowity będący sumą wyników w poszczególnych bojach (<em>przysiad ze stangą, wyciskanie na ławce</em> oraz <em>martwy ciąg)</em>.</p>
+<section id="opis-zmiennych" class="level2">
+<h2 class="anchored" data-anchor-id="opis-zmiennych">1.1 Opis zmiennych</h2>
+<ul>
+<li><p><strong>AgeClass (Wiek)-</strong> zmienna kateogryczna reprezentująca przedziały wiekowe według, których klasyfikowani są zawodnicy. Przyjmuje wartość najmniejszą <strong>5-12</strong> oraz największą <strong>80+</strong></p></li>
+<li><p><strong>Sex (Płeć)-</strong> zmienna kategoryczna określająca płeć zawodnika.</p></li>
+<li><p><strong>BodyweightKg (Masa)-</strong> zmienna reprezentująca masę ciała zawodnika w kilogramach. Masa ciała jest istotnym parametrem w trójboju siłowym, ponieważ klasyfikuje zawodników w odpowiednie kategorie wagowe i może wpływać na ich wydajność w zawodach.</p></li>
+<li><p><strong>TotalKg (Wynik) -</strong> zmienna ta odnosi się do sumy maksymalnych ciężarów, które zawodnik podniósł w trzech bojach: <em>przysiadzie ze sztangą, wyciskaniu na ławce leżąc oraz martwym ciągu.</em> Jest to główny wskaźnik wydajności w trójboju siłowym, odzwierciedlający siłe i umiejętności zawodnika. W dalszej części raportu będdziemy używać określeń takich jak <strong>Wynik sumaryczny, całkowity, total.</strong></p></li>
+</ul>
+</section>
 <section id="pytania-badawcze" class="level2">
-<h2 class="anchored" data-anchor-id="pytania-badawcze">1.1 Pytania badawcze</h2>
+<h2 class="anchored" data-anchor-id="pytania-badawcze">1.2 Pytania badawcze</h2>
 <p>W ramach analizy postaramy się odpowiedzieć na następujące pytania:</p>
 <ol type="1">
 <li><p>Czy istnieje zależność między wagą a wynikiem całkowitym?</p></li>

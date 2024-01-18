@@ -19,7 +19,17 @@ editor: visual
 
 Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. [Dane](https://gitlab.com/openpowerlifting/opl-data) zostały udostępnione na warunkach licencji **GNU AGPLv3.** Głównymi zmiennymi, które będą nas interesować są **AgeClass, Sex** (zmienne kategoryczne określające przedział wiekowy zawodnika oraz jego płeć) oraz zmienne ciągłe **BodyweightKg, TotalKg,** które wyrażają masę ciała zawodnika, oraz wynik całkowity będący sumą wyników w poszczególnych bojach (*przysiad ze stangą, wyciskanie na ławce* oraz *martwy ciąg)*.
 
-## 1.1 Pytania badawcze
+## 1.1 Opis zmiennych 
+
+-   **AgeClass (Wiek)-** zmienna kateogryczna reprezentująca przedziały wiekowe według, których klasyfikowani są zawodnicy. Przyjmuje wartość najmniejszą **5-12** oraz największą **80+**
+
+-   **Sex (Płeć)-** zmienna kategoryczna określająca płeć zawodnika.
+
+-   **BodyweightKg (Masa)-** zmienna reprezentująca masę ciała zawodnika w kilogramach. Masa ciała jest istotnym parametrem w trójboju siłowym, ponieważ klasyfikuje zawodników w odpowiednie kategorie wagowe i może wpływać na ich wydajność w zawodach.
+
+-   **TotalKg (Wynik) -** zmienna ta odnosi się do sumy maksymalnych ciężarów, które zawodnik podniósł w trzech bojach: *przysiadzie ze sztangą, wyciskaniu na ławce leżąc oraz martwym ciągu.* Jest to główny wskaźnik wydajności w trójboju siłowym, odzwierciedlający siłe i umiejętności zawodnika. W dalszej części raportu będdziemy używać określeń takich jak **Wynik sumaryczny, całkowity, total.**
+
+## 1.2 Pytania badawcze
 
 W ramach analizy postaramy się odpowiedzieć na następujące pytania:
 
