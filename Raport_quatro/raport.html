@@ -9,7 +9,7 @@
 <meta name="author" content="Emil Olszewski, Jakub Kempa">
 <meta name="dcterms.date" content="2024-01-17">
 
-<title>Analiza wyników w trójboju</title>
+<title>Analiza wyników w trójboju siłowym Raport 1. Pakiety statystyczne</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Analiza wyników w trójboju</h1>
+<h1 class="title">Analiza wyników w trójboju siłowym Raport 1. Pakiety statystyczne</h1>
 </div>
 
 
@@ -136,7 +136,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>2. Ładowanie danych</h1>
 <p>Wpierw przystąpimy do załadowania potrzebnych bibliotek</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Teraz odczytamy dane z pliku csv.</p>
 <div class="cell" data-layout-align="center">
@@ -262,74 +264,428 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6          F  82.1     NA</code></pre>
 </div>
 </div>
-<p>Na sam koniec posortujemy jeszcze kolumnę wiek w kolejności rosnącej</p>
+<p>Nasze dane mają również rekordy z brakiem danych, zatem kolejnym krokiem jest usunięcie wierszy, w których takie braki się pojawiają.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dzięki temu otrzymujemy zestaw danych, który swobodnie może być poddawanym analizom.</p>
 </section>
 </section>
-<section id="histogramy" class="level1">
-<h1>3. Histogramy</h1>
+<section id="analiza-jednowymiarowa" class="level1">
+<h1>3. Analiza jednowymiarowa</h1>
+<p>W tej części zajmiemy się analizą statystyczną wybranych przez nas kategorii. Zmienne kategoryczne mają ograniczone możliwości co do analizy, dlatego ograniczymy się do histogramu i przedstawienia liczności.</p>
+<section id="zmienna-płeć" class="level2">
+<h2 class="anchored" data-anchor-id="zmienna-płeć">3.1 Zmienna: <em>Płeć</em></h2>
+<p>Dla tej zmiennej występują tylko dwie wartości <em>M, F</em>, oznaczające płeć zawodnika/zawodniczki. Przewaga mężczyzn nie jest zaskakująca.</p>
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot normalized histograms for each level of the "wiek" factor</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>desired_order <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"5-12"</span>, <span class="st">"13-15"</span>, <span class="st">"16-17"</span>, <span class="st">"18-19"</span>, <span class="st">"20-23"</span>, <span class="st">"24-34"</span>, <span class="st">"35-39"</span>, <span class="st">"40-44"</span>, <span class="st">"45-49"</span>, <span class="st">"50-54"</span>, <span class="st">"55-59"</span>, <span class="st">"60-64"</span>, <span class="st">"65-69"</span>, <span class="st">"70-74"</span>, <span class="st">"75-79"</span>, <span class="st">"80-999"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram - Wiek"</span>, <span class="at">x =</span> <span class="st">"wiek"</span>, <span class="at">y =</span> <span class="st">"ilość"</span>) <span class="sc">+</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> plec, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Wiek"</span>) <span class="sc">+</span> </span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> plec, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Płeć"</span>) <span class="sc">+</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plec <span class="ot">&lt;-</span> <span class="fu">table</span>(probka<span class="sc">$</span>plec)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>procent_danych <span class="ot">&lt;-</span>  <span class="fu">round</span>(<span class="fu">prop.table</span>(plec) <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits=</span><span class="dv">2</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Plec =</span> <span class="fu">as.character</span>(<span class="fu">names</span>(plec)), <span class="at">Licznosc =</span> <span class="fu">as.numeric</span>(plec), <span class="at">Procent =</span> <span class="fu">as.numeric</span>(procent_danych))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Histogram zmiennej - Płeć</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca liczność i procent pod względem płci </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Plec</th>
+<th style="text-align: right;">Licznosc</th>
+<th style="text-align: right;">Procent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">11748</td>
+<td style="text-align: right;">25.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">34510</td>
+<td style="text-align: right;">74.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>Histogram zmiennej - Płeć</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="zmienna-kategoria-wiekowa" class="level2">
+<h2 class="anchored" data-anchor-id="zmienna-kategoria-wiekowa">3.2 Zmienna: <em>Kategoria wiekowa</em></h2>
+<p>Występuje tutaj 16 różnych wartości, przypisujących danego zawodnika do danej kategorii. Najwięcej osób startuje w kategorii wiekowej <em>24-34</em>, co stanowi ok. 29% wszystkich zawodników. Kategorię <em>80-999</em> należy rozumieć jako osoby w wieku <span class="math inline">\(\ge 80\)</span></p>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>desired_order <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"5-12"</span>, <span class="st">"13-15"</span>, <span class="st">"16-17"</span>, <span class="st">"18-19"</span>, <span class="st">"20-23"</span>, <span class="st">"24-34"</span>, <span class="st">"35-39"</span>, <span class="st">"40-44"</span>, <span class="st">"45-49"</span>, <span class="st">"50-54"</span>, <span class="st">"55-59"</span>, <span class="st">"60-64"</span>, <span class="st">"65-69"</span>, <span class="st">"70-74"</span>, <span class="st">"75-79"</span>, <span class="st">"80-999"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram - Wiek"</span>, <span class="at">x =</span> <span class="st">"wiek"</span>, <span class="at">y =</span> <span class="st">"ilość"</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>wiek_ilosc <span class="ot">&lt;-</span> <span class="fu">table</span>(probka<span class="sc">$</span>wiek)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>procent_danych <span class="ot">&lt;-</span>  <span class="fu">round</span>(<span class="fu">prop.table</span>(wiek_ilosc) <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits=</span><span class="dv">2</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Wiek =</span> <span class="fu">as.character</span>(<span class="fu">names</span>(wiek_ilosc)), <span class="at">Licznosc =</span> <span class="fu">as.numeric</span>(wiek_ilosc), <span class="at">Procent =</span> <span class="fu">as.numeric</span>(procent_danych))</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Histogram zmiennej - Kategoria wiekowa</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca liczność i procent dla danej kategorii wiekowej </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Wiek</th>
+<th style="text-align: right;">Licznosc</th>
+<th style="text-align: right;">Procent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">11966</td>
+<td style="text-align: right;">25.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-15</td>
+<td style="text-align: right;">1134</td>
+<td style="text-align: right;">2.45</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-17</td>
+<td style="text-align: right;">3160</td>
+<td style="text-align: right;">6.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18-19</td>
+<td style="text-align: right;">3960</td>
+<td style="text-align: right;">8.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20-23</td>
+<td style="text-align: right;">5644</td>
+<td style="text-align: right;">12.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24-34</td>
+<td style="text-align: right;">9973</td>
+<td style="text-align: right;">21.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-39</td>
+<td style="text-align: right;">2637</td>
+<td style="text-align: right;">5.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-44</td>
+<td style="text-align: right;">2493</td>
+<td style="text-align: right;">5.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45-49</td>
+<td style="text-align: right;">1637</td>
+<td style="text-align: right;">3.54</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5-12</td>
+<td style="text-align: right;">171</td>
+<td style="text-align: right;">0.37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50-54</td>
+<td style="text-align: right;">1321</td>
+<td style="text-align: right;">2.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">55-59</td>
+<td style="text-align: right;">854</td>
+<td style="text-align: right;">1.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">60-64</td>
+<td style="text-align: right;">623</td>
+<td style="text-align: right;">1.35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">65-69</td>
+<td style="text-align: right;">338</td>
+<td style="text-align: right;">0.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70-74</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">0.48</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">75-79</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">0.20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80-999</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>Histogram zmiennej - Kategoria wiekowa</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="zmienna-waga-zawodnika" class="level2">
+<h2 class="anchored" data-anchor-id="zmienna-waga-zawodnika">2.3 Zmienna: <em>Waga zawodnika</em></h2>
+<p>Dla tej zmiennej ciągłej można już przeprowadzić szereg analiz statystycznych oraz narysować wykres pudełkowy.</p>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Unormowany histogram - Masa zawodnika"</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">y =</span> masa)) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykres pudełkowy masy"</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Histogram</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Boxplot</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>Wykresy dla zmiennej Masa</p>
+</div>
+</div>
+</div>
+</div>
+<p>Na histogramie widzimy, że jest on prawostronnie skośny i prawie symetryczny. Ponadto zarówno histogram, jak i wykres pudełkowy wykazują dużą obecność tzw. outliersów, czyli wartości odstających, wywołanych niskim rozstępem międzykwartylowym. Wysoka intensywność występowania wartości skrajnych może sugerować dodatnią kurtozę nadwyżkową. Poniżej w tabeli przedstawione są podstawowe statystki dla tej zmiennej.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>summary_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statystyki =</span> <span class="fu">c</span>(<span class="st">"Minimum"</span>, <span class="st">"Pierwszy kwartyl"</span>, <span class="st">"Mediana"</span>, <span class="st">"Srednia"</span>, <span class="st">"Trzeci kwartyl"</span>, <span class="st">"Rozstep miedzykwartylowy"</span>, <span class="st">"Maximum"</span>, <span class="st">"Wariancja"</span>, <span class="st">"Skosnosc"</span>, <span class="st">"Kurtoza nadwyżkowa"</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Wartosci =</span> <span class="fu">c</span>(<span class="fu">min</span>(probka<span class="sc">$</span>masa), <span class="fu">quantile</span>(probka<span class="sc">$</span>masa, <span class="fl">0.25</span>), <span class="fu">median</span>(probka<span class="sc">$</span>masa), <span class="fu">mean</span>(probka<span class="sc">$</span>masa), <span class="fu">quantile</span>(probka<span class="sc">$</span>masa, <span class="fl">0.75</span>), <span class="fu">IQR</span>(probka<span class="sc">$</span>masa), <span class="fu">max</span>(probka<span class="sc">$</span>masa), <span class="fu">var</span>(probka<span class="sc">$</span>masa), <span class="fu">skewness</span>(probka<span class="sc">$</span>masa), <span class="fu">kurtosis</span>(probka<span class="sc">$</span>masa))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(summary_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca zbiór wartości poszczególnych statystyk </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statystyki</th>
+<th style="text-align: right;">Wartosci</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Minimum</td>
+<td style="text-align: right;">20.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pierwszy kwartyl</td>
+<td style="text-align: right;">67.2000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mediana</td>
+<td style="text-align: right;">81.8000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Srednia</td>
+<td style="text-align: right;">83.9864408</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Trzeci kwartyl</td>
+<td style="text-align: right;">98.6000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rozstep miedzykwartylowy</td>
+<td style="text-align: right;">31.4000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maximum</td>
+<td style="text-align: right;">241.1000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wariancja</td>
+<td style="text-align: right;">505.7357659</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Skosnosc</td>
+<td style="text-align: right;">0.6726162</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kurtoza nadwyżkowa</td>
+<td style="text-align: right;">0.6523304</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Wartość mediany jest zbliżona do wartości średniej, co wskazuje na dość dużą symetryczność rozkładu. Brak ich pokrycia wynika z istnienia wartości odstających. Skośność większa od 0 wskazuje na prawoskośność, co zgadza się z wnioskami odnośnie histogramu oraz jego wyglądem. Kurtoza nadwyżkowa większa od 0 oznacza, że rozkład jest leptokurtyczny. Istnieje jednak wiele podobieństw pomiędzy rozkładem mas zawodników oraz rozkładem normalnym. Rozbieżność występuje prawdopodobnie ze względu na niestandardowe warunki, którymi są zawody w trójboju siłowym. Zbiorem danych są sportowcy, a nie losowa grupa ludzi, przez co rozkład masy zawodników może bardziej różnić się od rozkładu normalnego, niż losowa próba z populacji.</p>
+</section>
+<section id="zmienna-łączny-wynik" class="level2">
+<h2 class="anchored" data-anchor-id="zmienna-łączny-wynik">2.4 Zmienna: Łączny wynik</h2>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Unormowany histogram - Suma wszystkich podniesionych ciężarów"</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">y =</span> total)) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykres pudełkowy wyniku total"</span>) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Histogram</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Boxplot</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>Wykresy dla zmiennej Total</p>
 </div>
 </div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>summary_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statystyki =</span> <span class="fu">c</span>(<span class="st">"Minimum"</span>, <span class="st">"Pierwszy kwartyl"</span>, <span class="st">"Mediana"</span>, <span class="st">"Srednia"</span>, <span class="st">"Trzeci kwartyl"</span>, <span class="st">"Rozstep miedzykwartylowy"</span>, <span class="st">"Maximum"</span>, <span class="st">"Wariancja"</span>, <span class="st">"Skosnosc"</span>, <span class="st">"Kurtoza nadwyżkowa"</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Wartosci =</span> <span class="fu">c</span>(<span class="fu">min</span>(probka<span class="sc">$</span>total), <span class="fu">quantile</span>(probka<span class="sc">$</span>total, <span class="fl">0.25</span>), <span class="fu">median</span>(probka<span class="sc">$</span>total), <span class="fu">mean</span>(probka<span class="sc">$</span>total), <span class="fu">quantile</span>(probka<span class="sc">$</span>total, <span class="fl">0.75</span>), <span class="fu">IQR</span>(probka<span class="sc">$</span>total), <span class="fu">max</span>(probka<span class="sc">$</span>total), <span class="fu">var</span>(probka<span class="sc">$</span>total), <span class="fu">skewness</span>(probka<span class="sc">$</span>total), <span class="fu">kurtosis</span>(probka<span class="sc">$</span>total))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(summary_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca zbiór wartości poszczególnych statystyk </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statystyki</th>
+<th style="text-align: right;">Wartosci</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Minimum</td>
+<td style="text-align: right;">12.5000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pierwszy kwartyl</td>
+<td style="text-align: right;">204.1200000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mediana</td>
+<td style="text-align: right;">356.0700000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Srednia</td>
+<td style="text-align: right;">378.2211678</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Trzeci kwartyl</td>
+<td style="text-align: right;">532.5000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rozstep miedzykwartylowy</td>
+<td style="text-align: right;">328.3800000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maximum</td>
+<td style="text-align: right;">1250.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wariancja</td>
+<td style="text-align: right;">41887.4868748</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Skosnosc</td>
+<td style="text-align: right;">0.3981495</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kurtoza nadwyżkowa</td>
+<td style="text-align: right;">-0.6074609</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 <section id="rozkłady-warunkowe" class="level2">
 <h2 class="anchored" data-anchor-id="rozkłady-warunkowe">3.1. Rozkłady warunkowe</h2>
 <section id="rozkłady-zmiennych-warunkowane-płcią" class="level3">
@@ -338,80 +694,298 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 </div>
-<p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong></p>
 </section>
 <section id="rozkłady-zmiennych-warunkowane-wiekiem." class="level3">
 <h3 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-wiekiem.">3.1.2. Rozkłady zmiennych warunkowane wiekiem.</h3>
-<section id="wynik-total-a-wiek." class="level4">
-<h4 class="anchored" data-anchor-id="wynik-total-a-wiek.">3.1.2.1. Wynik total a wiek.</h4>
-<p>Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku.</p>
-</section>
-<section id="masa-a-wiek." class="level4">
-<h4 class="anchored" data-anchor-id="masa-a-wiek.">3.1.2.2. Masa a wiek.</h4>
-<p>Patrząc zaś na boxploty opisujące <strong>masę</strong> zawodnika widzimy wiele wartości skrajnych większych niż <span class="math inline">\(Q_3 + 1,5\,\text{IQR}\)</span> co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się <strong>kategorie wagowe</strong> aby zwodnicy konkurowali z rywalami do siebie podobnymi<strong>.</strong> Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.</p>
+<p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong></p>
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> masa, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe masy warunkowanej wiekiem"</span>) <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> total, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe wyniku total warunkowanego wiekiem"</span>) <span class="sc">+</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> masa, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe masy warunkowanej wiekiem"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> total, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe wyniku total warunkowanego wiekiem"</span>) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">limits =</span> desired_order) <span class="sc">+</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+</div>
+</div>
+<section id="wynik-total-a-wiek." class="level4">
+<h4 class="anchored" data-anchor-id="wynik-total-a-wiek.">3.1.2.1. Wynik total a wiek.</h4>
+<p>Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku. Potwierdza się to w danych z poniższej tabeli.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>wiek_ilosc <span class="ot">&lt;-</span> <span class="fu">table</span>(probka<span class="sc">$</span>wiek)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>stats <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(wiek) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">Skosnosc =</span> <span class="fu">skewness</span>(total), <span class="at">Kurtoza_nadwyzkowa =</span> <span class="fu">kurtosis</span>(total))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca skośność i kurtozę rozkładu wyniku total warunkowanego wiekiem </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">wiek</th>
+<th style="text-align: right;">Skosnosc</th>
+<th style="text-align: right;">Kurtoza_nadwyzkowa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">0.2780792</td>
+<td style="text-align: right;">-0.4331673</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-15</td>
+<td style="text-align: right;">0.3746677</td>
+<td style="text-align: right;">-0.4525842</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-17</td>
+<td style="text-align: right;">0.0793386</td>
+<td style="text-align: right;">-0.5930804</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18-19</td>
+<td style="text-align: right;">-0.1033734</td>
+<td style="text-align: right;">-0.7966307</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20-23</td>
+<td style="text-align: right;">0.0521875</td>
+<td style="text-align: right;">-0.8783159</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24-34</td>
+<td style="text-align: right;">0.3216442</td>
+<td style="text-align: right;">-0.9021865</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-39</td>
+<td style="text-align: right;">0.6204089</td>
+<td style="text-align: right;">-0.6613723</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-44</td>
+<td style="text-align: right;">0.6433957</td>
+<td style="text-align: right;">-0.6440888</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45-49</td>
+<td style="text-align: right;">0.7545083</td>
+<td style="text-align: right;">-0.3772775</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5-12</td>
+<td style="text-align: right;">2.4121606</td>
+<td style="text-align: right;">6.6358645</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50-54</td>
+<td style="text-align: right;">0.7592848</td>
+<td style="text-align: right;">-0.4474953</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">55-59</td>
+<td style="text-align: right;">0.8461354</td>
+<td style="text-align: right;">-0.4060648</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">60-64</td>
+<td style="text-align: right;">0.7555853</td>
+<td style="text-align: right;">-0.5720298</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">65-69</td>
+<td style="text-align: right;">0.8043215</td>
+<td style="text-align: right;">-0.5803235</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70-74</td>
+<td style="text-align: right;">0.7688846</td>
+<td style="text-align: right;">-0.6465690</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">75-79</td>
+<td style="text-align: right;">0.9158347</td>
+<td style="text-align: right;">-0.5115341</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80-999</td>
+<td style="text-align: right;">1.1965920</td>
+<td style="text-align: right;">0.4847552</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="masa-a-wiek." class="level4">
+<h4 class="anchored" data-anchor-id="masa-a-wiek.">3.1.2.2. Masa a wiek.</h4>
+<p>Patrząc zaś na boxploty opisujące <strong>masę</strong> zawodnika widzimy wiele wartości skrajnych większych niż <span class="math inline">\(Q_3 + 1,5\,\text{IQR}\)</span> co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Potwierdza się to w poniższej tabeli. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się <strong>kategorie wagowe</strong> aby zwodnicy konkurowali z rywalami do siebie podobnymi<strong>.</strong> Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>wiek_ilosc <span class="ot">&lt;-</span> <span class="fu">table</span>(probka<span class="sc">$</span>wiek)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>stats <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(wiek) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">Skosnosc =</span> <span class="fu">skewness</span>(masa), <span class="at">Kurtoza_nadwyzkowa =</span> <span class="fu">kurtosis</span>(masa))</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Tabela przedstawiająca skośność i kurtozę rozkładu masy warunkowanego wiekiem </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">wiek</th>
+<th style="text-align: right;">Skosnosc</th>
+<th style="text-align: right;">Kurtoza_nadwyzkowa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">0.6626515</td>
+<td style="text-align: right;">0.3105583</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13-15</td>
+<td style="text-align: right;">1.1867187</td>
+<td style="text-align: right;">1.7087924</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16-17</td>
+<td style="text-align: right;">0.9426102</td>
+<td style="text-align: right;">0.8932897</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18-19</td>
+<td style="text-align: right;">0.9770704</td>
+<td style="text-align: right;">1.3976272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">20-23</td>
+<td style="text-align: right;">0.6631823</td>
+<td style="text-align: right;">0.7298725</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24-34</td>
+<td style="text-align: right;">0.6850341</td>
+<td style="text-align: right;">0.9967756</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35-39</td>
+<td style="text-align: right;">0.5599211</td>
+<td style="text-align: right;">0.6767956</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40-44</td>
+<td style="text-align: right;">0.4696464</td>
+<td style="text-align: right;">0.2185508</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45-49</td>
+<td style="text-align: right;">0.6895150</td>
+<td style="text-align: right;">1.2378278</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5-12</td>
+<td style="text-align: right;">1.5794701</td>
+<td style="text-align: right;">3.0748251</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50-54</td>
+<td style="text-align: right;">0.4386190</td>
+<td style="text-align: right;">-0.0745676</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">55-59</td>
+<td style="text-align: right;">0.5136044</td>
+<td style="text-align: right;">0.5761644</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">60-64</td>
+<td style="text-align: right;">0.6081655</td>
+<td style="text-align: right;">0.5912268</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">65-69</td>
+<td style="text-align: right;">0.2940936</td>
+<td style="text-align: right;">-0.0756863</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70-74</td>
+<td style="text-align: right;">0.7152542</td>
+<td style="text-align: right;">0.9151644</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">75-79</td>
+<td style="text-align: right;">-0.1157421</td>
+<td style="text-align: right;">-0.3153188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80-999</td>
+<td style="text-align: right;">1.0261430</td>
+<td style="text-align: right;">0.3067724</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
@@ -425,16 +999,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Wykres rozproszenia "</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"total"</span>, <span class="at">color =</span> <span class="st">"płeć"</span>) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Wykres rozproszenia "</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"total"</span>, <span class="at">color =</span> <span class="st">"płeć"</span>) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -443,25 +1017,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>probka_mean <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(masa, plec) <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_total =</span> <span class="fu">mean</span>(total))</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only unique values of "masa"</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>probka_mean_unique <span class="ot">&lt;-</span> probka_mean <span class="sc">%&gt;%</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(masa, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot with color by "plec" and mean points</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka_mean_unique, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> mean_total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatter Plot of masa vs mean_total"</span>,</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"mean_total"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>probka_mean <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(masa, plec) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_total =</span> <span class="fu">mean</span>(total))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only unique values of "masa"</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>probka_mean_unique <span class="ot">&lt;-</span> probka_mean <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(masa, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot with color by "plec" and mean points</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka_mean_unique, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> mean_total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatter Plot of masa vs mean_total"</span>,</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"mean_total"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="raport_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="raport_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -470,47 +1044,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cor_by_plec <span class="ot">&lt;-</span> probka_mean_unique <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(plec) <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">correlation =</span> <span class="fu">cor</span>(masa, total, <span class="at">use =</span> <span class="st">"complete.obs"</span>))</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate correlation for the entire data frame</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>cor_total <span class="ot">&lt;-</span> <span class="fu">cor</span>(probka_mean_unique<span class="sc">$</span>masa, probka_mean_unique<span class="sc">$</span>total, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla każdej z płci:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cor_by_plec <span class="ot">&lt;-</span> probka_mean_unique <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(plec) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">correlation =</span> <span class="fu">cor</span>(masa, total, <span class="at">use =</span> <span class="st">"complete.obs"</span>))</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate correlation for the entire data frame</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>cor_total <span class="ot">&lt;-</span> <span class="fu">cor</span>(probka_mean_unique<span class="sc">$</span>masa, probka_mean_unique<span class="sc">$</span>total, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla każdej z płci:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Korelacja pomiędzy masą a wynikiem dla każdej z płci:</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_by_plec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_by_plec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   plec  correlation
   &lt;fct&gt;       &lt;dbl&gt;
 1 F           0.350
-2 M           0.376</code></pre>
+2 M           0.378</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla całej próbki:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla całej próbki:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Korelacja pomiędzy masą a wynikiem dla całej próbki:</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.4438915</code></pre>
+<pre><code>[1] 0.4444799</code></pre>
 </div>
 </div>
 <p>Na podstawie powyższych wartości można stwierdzić, że istnieją przesłanki ku stwierdzeniu dodatniej korelacji pomiędzy masą ciała zawodnika a jego wynikami siłowymi niezależnie od płci.</p>
 </section>
+</section>
+<section id="podsumowanie" class="level1">
+<h1>5. Podsumowanie</h1>
+<p>W wyniku powyższej analizy doszliśmy do następujących wniosków</p>
+<ul>
+<li><p>Rozkłady wyników siłowych dla poszczególnych płci cechują się <strong>bimodalnością.</strong> Nie byliśmy w stanie stwierdzić z czego ona wynika lecz przypuszczamy, że może mieć związek z grupą zawodników, którym nie udało się uzyskać poprawnego podejścia do któregoś z bojów przez co uzyskali oni wynik znacznie niższy niż większość.</p></li>
+<li><p>Rozkłady masy zawodnika w niskich klasach wiekowych cechują się <strong>leptokurtycznością i prawoskośnością.</strong> Obserwujemy wiele wartości skrajnych oraz prawy ogon jest o wiele dłuższy od lewego. Zawodnikom młodym o wiele łatwiej jest utrzymywać wysoką masę ciała jednocześnie uzyskując dobre wyniki siłowe. <strong>Stanowi to przesłankę ku dodatniej korelacji wyników siłowych i masy ciała.</strong></p></li>
+<li><p>Rozkłady warunkowe wyników total cechują się <strong>skośnością prawostronną,</strong> która zwiększa się wraz z wiekiem. Również od pewnego momentu (<strong>20-23)</strong> wraz z wiekiem <strong>maleje mediana.</strong> Można więc pokusić się o stwierdzenie, że wtedy największa ilość zawodników przeżywa swój szczyt możliwości.</p></li>
+<li><p>Masa zawodnika i jego osiągi siłowe są <strong>dodatnio skorelowane.</strong> Zgadza się to z naszą intuicją jak i poprzednimi obserwacjami. Uzasadnia to również dzielenie zawodników na kategorie wagowe jak ma to miejsce w przypadku większości zawodów.</p></li>
+</ul>
 </section>
 
 </main>
