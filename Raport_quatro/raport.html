@@ -124,114 +124,101 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="ładowanie-danych">Ładowanie danych</h2>
 <p>Wpierw przystąpimy do załadowania potrzebnych bibliotek</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: pakiet 'ggplot2' został zbudowany w wersji R 4.3.2</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.0
-✔ purrr     1.0.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-</div>
-<p>You can add options to executable code like this</p>
+<p>Teraz odczytamy dane z pliku csv.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dane <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../menpowerlifting.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dane <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../menpowerlifting.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Jak widać mamy doczynienia z bardzo dużym zbiorem danych.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 158266     41</code></pre>
 </div>
 </div>
 <p>Tym samym w celu dalszej analizy wygenerujemy losową próbkę o długości 5000</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dane, <span class="dv">5000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dane, <span class="dv">5000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tak się prezentuje 10 początkowych obserwacji</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Name Sex Event Equipment  Age AgeClass BirthYearClass
-1   Valentin Soto   M   SBD       Raw 30.0    24-34          24-39
-2 Steffen Burghar   M   SBD       Raw 64.0    60-64          60-69
-3  Gareth Murchie   M   SBD       Raw   NA                        
-4  Miha Jovanović   M   SBD       Raw 21.0    20-23          19-23
-5         Qing Li   M   SBD       Raw 18.5    18-19          19-23
-6     Jack Lysell   M   SBD       Raw 24.0    24-34          24-39
+<pre><code>              Name Sex Event Equipment  Age AgeClass BirthYearClass
+1  Jackson Lathrop   M   SBD       Raw 16.5    16-17          14-18
+2 Francesco Tironi   M   SBD       Raw 28.5    24-34          24-39
+3  Carlos Hicks Jr   M   SBD       Raw 15.5    16-17          14-18
+4      Tomáš Vorel   M   SBD       Raw 16.5    16-17          14-18
+5     Jason Masler   M   SBD       Raw 18.0    18-19               
+6   Michal Talalaj   M   SBD       Raw 16.5    16-17          14-18
        Division BodyweightKg WeightClassKg Squat1Kg Squat2Kg Squat3Kg Squat4Kg
-1          Open       106.20           110   -250.0    252.5    262.5       NA
-2 Masters 60-64        71.80            75    140.0    150.0    160.0       NA
-3      M-C-Open        82.40            83    140.0    150.0    160.0       NA
-4          Open       101.40           110    200.0    215.0   -225.0       NA
-5          MR-O        66.76          67.5    125.0   -140.0   -140.0       NA
-6          Open        98.30           100    182.5    202.5    215.0       NA
+1         MR-T2        68.30            75      140      145    150.0       NA
+2        Senior       117.12           120      265      280   -290.0       NA
+3         MR-Sj        81.70            83     -230      240    252.5       NA
+4   Sub-Juniors        64.20            66       NA       NA       NA       NA
+5 Juniors 18-19        64.10          67.5       NA       NA       NA       NA
+6         MR-T2        81.50          82.5      175     -185    185.0       NA
   Best3SquatKg Bench1Kg Bench2Kg Bench3Kg Bench4Kg Best3BenchKg Deadlift1Kg
-1        262.5    187.5   -192.5   -192.5       NA        187.5       290.0
-2        160.0     92.5     95.0    -97.5       NA         95.0       140.0
-3        160.0    115.0    122.5    130.0       NA        130.0       215.0
-4        215.0    150.0   -165.0   -165.0       NA        150.0       250.0
-5        125.0    110.0    120.0   -125.0       NA        120.0       130.0
-6        215.0    135.0    142.5    147.5       NA        147.5       237.5
+1        150.0       95      100     -110       NA        100.0         155
+2        280.0      165      175     -180       NA        175.0         280
+3        252.5      125      135     -145       NA        135.0         245
+4        147.5       NA       NA       NA       NA        105.0          NA
+5        167.5       NA       NA       NA       NA         87.5          NA
+6        185.0      100      110     -115       NA        110.0         185
   Deadlift2Kg Deadlift3Kg Deadlift4Kg Best3DeadliftKg TotalKg Place   Dots
-1         300      -307.5          NA             300   750.0     1 450.27
-2         150       160.0          NA             160   415.0     1 306.37
-3         225       230.0          NA             230   520.0     1 352.49
-4         255          NA          NA             255   620.0     3 379.35
-5         150       165.0          NA             165   410.0     1 318.55
-6         250          NA          NA             250   612.5     4 379.85
-   Wilks Glossbrenner Goodlift Tested  Country State    Federation
-1 446.41       426.33    92.11    Yes      USA    NV          USPA
-2 305.11       295.36    61.89                           PAGermany
-3 348.60       335.44    72.25    Yes  England    NM           EPA
-4 375.27       358.36    77.81        Slovenia       WRPF-Slovenia
-5 318.94       309.75    63.53    Yes    China               USAPL
-6 375.38       358.65    78.01             USA    TX          USPA
-  ParentFederation       Date MeetCountry MeetState    MeetTown
-1              IPL 2023-09-09         USA        NV   Las Vegas
-2              WPF 2015-05-01     Germany                Coburg
-3              IPF 2019-04-27     England                      
-4             WRPF 2023-10-28    Slovenia           Škofja Loka
-5                  2023-07-29       China                      
-6              IPL 2020-12-05         USA        MO Kansas City
-                                                    MeetName
-1                                 Drug Tested Desert Rampage
-2 Deutsche Meisterschaften im KDK Bankdrücken und Kreuzheben
-3                        North Midlands Spring Championships
-4                        4. slovensko powerlifting prvenstvo
-5                                    Southwest Championships
-6                                            Only the Strong</code></pre>
+1         160         165          NA           165.0   415.0     5 317.17
+2         290         300          NA           300.0   755.0     3 437.18
+3         255         260          NA           260.0   647.5     1 441.05
+4          NA          NA          NA           172.5   425.0     1 340.00
+5          NA          NA          NA           167.5   422.5     1 338.40
+6         190         200          NA           200.0   495.0     1 337.65
+   Wilks Glossbrenner Goodlift Tested Country State Federation ParentFederation
+1 316.99       307.54    63.53    Yes     USA    GA      USAPL                 
+2 436.62       418.20    88.71    Yes                     FIPL              IPF
+3 436.32       420.02    90.35    Yes     USA    MS        AMP              IPF
+4 341.50       332.29    67.23    Yes Czechia             CSST              IPF
+5 339.95       330.80    66.89            USA    CA       USPA              IPL
+6 334.06       321.61    69.16    Yes     USA    IL      USAPL                 
+        Date MeetCountry MeetState           MeetTown
+1 2023-11-04         USA        GA                   
+2 2023-10-14       Italy           S.Zenone al Lambro
+3 2022-12-10         USA        MS                   
+4 2017-05-13     Czechia                       Zbýšov
+5 2017-08-12         USA        CA         Long Beach
+6 2023-03-11         USA        IL                   
+                                                                                                  MeetName
+1                                                                              South Georgia Barbell Brawl
+2                                                                           Finali maschili senior classic
+3                                                                                         Mississippi Open
+4 Ročník Poháru Starosty Města Zbýšova v Klasickém Silovém Trojboji Dorostu a Juniorů S Mezinárodní Účastí
+5                                                                                          Long Beach Open
+6                                                                                    Shamrock the Compound</code></pre>
 </div>
 </div>
 <p>Interesować nas będą tylko zmienne <strong>AgeClass, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka[, <span class="fu">c</span>(<span class="st">"AgeClass"</span>, <span class="st">"BodyweightKg"</span>, <span class="st">"Best3BenchKg"</span>, <span class="st">"Best3SquatKg"</span>, <span class="st">"Best3DeadliftKg"</span>, <span class="st">"TotalKg"</span>)]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka[, <span class="fu">c</span>(<span class="st">"AgeClass"</span>, <span class="st">"BodyweightKg"</span>, <span class="st">"Best3BenchKg"</span>, <span class="st">"Best3SquatKg"</span>, <span class="st">"Best3DeadliftKg"</span>, <span class="st">"TotalKg"</span>)]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   AgeClass          BodyweightKg     Best3BenchKg    Best3SquatKg  
- Length:5000        Min.   : 23.40   Min.   : 12.0   Min.   : 16.5  
- Class :character   1st Qu.: 74.39   1st Qu.:100.0   1st Qu.:152.5  
- Mode  :character   Median : 86.80   Median :120.0   Median :180.0  
-                    Mean   : 87.94   Mean   :120.3   Mean   :180.0  
-                    3rd Qu.: 98.30   3rd Qu.:140.0   3rd Qu.:210.0  
-                    Max.   :196.70   Max.   :252.5   Max.   :365.5  
-                                     NA's   :4       NA's   :4      
+ Length:5000        Min.   : 21.77   Min.   : 10.5   Min.   : 11.0  
+ Class :character   1st Qu.: 74.30   1st Qu.:100.0   1st Qu.:150.0  
+ Mode  :character   Median : 86.09   Median :120.0   Median :180.0  
+                    Mean   : 87.99   Mean   :120.2   Mean   :179.2  
+                    3rd Qu.: 98.80   3rd Qu.:140.0   3rd Qu.:207.5  
+                    Max.   :200.00   Max.   :245.0   Max.   :410.0  
+                                     NA's   :5       NA's   :3      
  Best3DeadliftKg    TotalKg     
- Min.   : 31.0   Min.   : 59.5  
- 1st Qu.:182.5   1st Qu.:442.0  
- Median :212.5   Median :512.5  
- Mean   :210.5   Mean   :510.7  
- 3rd Qu.:240.0   3rd Qu.:585.0  
- Max.   :355.0   Max.   :922.5  
- NA's   :2                      </code></pre>
+ Min.   : 25.0   Min.   : 52.0  
+ 1st Qu.:182.5   1st Qu.:440.0  
+ Median :210.0   Median :510.0  
+ Mean   :209.4   Mean   :508.6  
+ 3rd Qu.:240.0   3rd Qu.:582.5  
+ Max.   :365.0   Max.   :955.0  
+ NA's   :6                      </code></pre>
 </div>
 </div>
 <p>Napotykamy pierwszy problem. Wszystkie zmienne są typu <code>character</code>, gdy powinny być typu</p>
@@ -241,86 +228,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Dokonajmy więc konwersji</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>BodyweightKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>BodyweightKg)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3BenchKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3BenchKg)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3SquatKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3SquatKg)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3DeadliftKg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3DeadliftKg)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>TotalKg         <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>TotalKg)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>AgeClass        <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>AgeClass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>BodyweightKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>BodyweightKg)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3BenchKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3BenchKg)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3SquatKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3SquatKg)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3DeadliftKg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3DeadliftKg)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>TotalKg         <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>TotalKg)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>AgeClass        <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>AgeClass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    AgeClass     BodyweightKg     Best3BenchKg    Best3SquatKg  
- 24-34  :1459   Min.   : 23.40   Min.   : 12.0   Min.   : 16.5  
- 20-23  :1044   1st Qu.: 74.39   1st Qu.:100.0   1st Qu.:152.5  
-        : 890   Median : 86.80   Median :120.0   Median :180.0  
- 18-19  : 513   Mean   : 87.94   Mean   :120.3   Mean   :180.0  
- 16-17  : 363   3rd Qu.: 98.30   3rd Qu.:140.0   3rd Qu.:210.0  
- 35-39  : 203   Max.   :196.70   Max.   :252.5   Max.   :365.5  
- (Other): 528                    NA's   :4       NA's   :4      
+ 24-34  :1468   Min.   : 21.77   Min.   : 10.5   Min.   : 11.0  
+ 20-23  :1092   1st Qu.: 74.30   1st Qu.:100.0   1st Qu.:150.0  
+        : 829   Median : 86.09   Median :120.0   Median :180.0  
+ 18-19  : 521   Mean   : 87.99   Mean   :120.2   Mean   :179.2  
+ 16-17  : 344   3rd Qu.: 98.80   3rd Qu.:140.0   3rd Qu.:207.5  
+ 35-39  : 191   Max.   :200.00   Max.   :245.0   Max.   :410.0  
+ (Other): 555                    NA's   :5       NA's   :3      
  Best3DeadliftKg    TotalKg     
- Min.   : 31.0   Min.   : 59.5  
- 1st Qu.:182.5   1st Qu.:442.0  
- Median :212.5   Median :512.5  
- Mean   :210.5   Mean   :510.7  
- 3rd Qu.:240.0   3rd Qu.:585.0  
- Max.   :355.0   Max.   :922.5  
- NA's   :2                      </code></pre>
+ Min.   : 25.0   Min.   : 52.0  
+ 1st Qu.:182.5   1st Qu.:440.0  
+ Median :210.0   Median :510.0  
+ Mean   :209.4   Mean   :508.6  
+ 3rd Qu.:240.0   3rd Qu.:582.5  
+ Max.   :365.0   Max.   :955.0  
+ NA's   :6                      </code></pre>
 </div>
 </div>
 <p>Dokonamy teraz zmiany nazw kolumn na bardziej przystępne</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(probka) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wiek"</span>, <span class="st">"masa"</span>, <span class="st">"lawka"</span>, <span class="st">"przysiad"</span>, <span class="st">"martwyciag"</span>, <span class="st">"total"</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(probka) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wiek"</span>, <span class="st">"masa"</span>, <span class="st">"lawka"</span>, <span class="st">"przysiad"</span>, <span class="st">"martwyciag"</span>, <span class="st">"total"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   wiek   masa lawka przysiad martwyciag total
-1 24-34 106.20 187.5    262.5        300 750.0
-2 60-64  71.80  95.0    160.0        160 415.0
-3        82.40 130.0    160.0        230 520.0
-4 20-23 101.40 150.0    215.0        255 620.0
-5 18-19  66.76 120.0    125.0        165 410.0
-6 24-34  98.30 147.5    215.0        250 612.5</code></pre>
+1 16-17  68.30 100.0    150.0      165.0 415.0
+2 24-34 117.12 175.0    280.0      300.0 755.0
+3 16-17  81.70 135.0    252.5      260.0 647.5
+4 16-17  64.20 105.0    147.5      172.5 425.0
+5 18-19  64.10  87.5    167.5      167.5 422.5
+6 16-17  81.50 110.0    185.0      200.0 495.0</code></pre>
 </div>
 </div>
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming your dataframe is named 'probka'</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 'probka' with the actual name of your dataframe</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot normalized histograms for each level of the "wiek" factor</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Wiek"</span>) <span class="sc">+</span> </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> lawka, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Lawka"</span>) <span class="sc">+</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> przysiad, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Przysiad"</span>) <span class="sc">+</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> martwyciag, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">12</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Martwy Ciag"</span>) <span class="sc">+</span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming your dataframe is named 'probka'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 'probka' with the actual name of your dataframe</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot normalized histograms for each level of the "wiek" factor</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Wiek"</span>) <span class="sc">+</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> lawka, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Lawka"</span>) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> przysiad, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Przysiad"</span>) <span class="sc">+</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> martwyciag, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">12</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Martwy Ciag"</span>) <span class="sc">+</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">

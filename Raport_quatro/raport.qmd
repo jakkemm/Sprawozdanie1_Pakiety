@@ -22,17 +22,17 @@ W ramach analizy postaramy się odpowiedzieć na następujące pytania:
 
 3.  W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od wieku?
 
-## Ładowanie danych
+# 2. Ładowanie danych
 
 Wpierw przystąpimy do załadowania potrzebnych bibliotek
 
 ```{r}
-#| echo: false
+#| warning: false
 library(tidyverse)
 library(readxl)
 ```
 
-You can add options to executable code like this
+Teraz odczytamy dane z pliku csv.
 
 ```{r}
 dane <- read.csv("../menpowerlifting.csv")
@@ -55,6 +55,8 @@ Tak się prezentuje 10 początkowych obserwacji
 ```{r}
 head(probka)
 ```
+
+## 2.1 Transformacje danych
 
 Interesować nas będą tylko zmienne **AgeClass, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg**
 
@@ -93,6 +95,8 @@ Dokonamy teraz zmiany nazw kolumn na bardziej przystępne
 colnames(probka) <- c("wiek", "masa", "lawka", "przysiad", "martwyciag", "total")
 head(probka)
 ```
+
+# 3. Histogramy
 
 ```{r}
 #| code-fold: true
@@ -139,3 +143,5 @@ ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 
 ```
+
+# 4. Analiza zależności
