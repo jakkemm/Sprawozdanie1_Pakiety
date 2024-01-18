@@ -126,22 +126,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="ładowanie-danych" class="level1">
 <h1>2. Ładowanie danych</h1>
 <p>Wpierw przystąpimy do załadowania potrzebnych bibliotek</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Teraz odczytamy dane z pliku csv.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../powerlifting.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Będziemy poddawać analizie próbkę o długości 50 000 obserwacji.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 49999</code></pre>
 </div>
 </div>
 <p>Tak się prezentuje 10 początkowych obserwacji</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Name Sex Event  Equipment  Age AgeClass BirthYearClass
@@ -198,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="transformacje-danych" class="level2">
 <h2 class="anchored" data-anchor-id="transformacje-danych">2.1 Transformacje danych</h2>
 <p>Interesować nas będą tylko zmienne <strong>AgeClass, “Sex”BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg</strong></p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka[, <span class="fu">c</span>(<span class="st">"AgeClass"</span>, <span class="st">"Sex"</span>, <span class="st">"BodyweightKg"</span>, <span class="st">"TotalKg"</span>)]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -219,14 +219,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>factor</code> dla <strong>AgeClass</strong> oraz <strong>Sex</strong></p></li>
 </ul>
 <p>Dokonajmy więc konwersji</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>BodyweightKg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>BodyweightKg)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>TotalKg      <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>TotalKg)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>AgeClass     <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>AgeClass)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Sex          <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>Sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    AgeClass     Sex        BodyweightKg       TotalKg      
@@ -240,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Dokonamy teraz zmiany nazw kolumn na bardziej przystępne</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(probka) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wiek"</span>, <span class="st">"plec"</span>, <span class="st">"masa"</span>, <span class="st">"total"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -285,24 +285,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 </div>
 <section id="rozkłady-warunkowe" class="level2">
 <h2 class="anchored" data-anchor-id="rozkłady-warunkowe">3.1. Rozkłady warunkowe</h2>
+<section id="rozkłady-zmiennych-warunkowane-płcią" class="level3">
+<h3 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-płcią">3.1.1. Rozkłady zmiennych warunkowane płcią</h3>
 <p>Na wykresach poniżej znajdują się rozkłady zmiennych <strong>Masa</strong> oraz <strong>Total</strong> warunkowane zmienną <strong>Płeć.</strong> Z wykresów możemy zauważyć ewidentną <strong>bimodalność</strong> zmiennej <strong>Total</strong> dla określonej płci.</p>
 <div>
 <details>
@@ -323,15 +341,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
 </div>
-<p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong> Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku.</p>
+</div>
+<p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong></p>
+</section>
+<section id="rozkłady-zmiennych-warunkowane-wiekiem." class="level3">
+<h3 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-wiekiem.">3.1.2. Rozkłady zmiennych warunkowane wiekiem.</h3>
+<section id="wynik-total-a-wiek." class="level4">
+<h4 class="anchored" data-anchor-id="wynik-total-a-wiek.">3.1.2.1. Wynik total a wiek.</h4>
+<p>Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku.</p>
+</section>
+<section id="masa-a-wiek." class="level4">
+<h4 class="anchored" data-anchor-id="masa-a-wiek.">3.1.2.2. Masa a wiek.</h4>
 <p>Patrząc zaś na boxploty opisujące <strong>masę</strong> zawodnika widzimy wiele wartości skrajnych większych niż <span class="math inline">\(Q_3 + 1,5\,\text{IQR}\)</span> co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się <strong>kategorie wagowe</strong> aby zwodnicy konkurowali z rywalami do siebie podobnymi<strong>.</strong> Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.</p>
 <div>
 <details>
@@ -348,18 +383,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="raport_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
 </div>
+</div>
+</section>
+</section>
 </section>
 </section>
 <section id="analiza-zależności" class="level1">
 <h1>4. Analiza zależności</h1>
+<section id="zależność-pomiędzy-masą-a-wynikiem-total." class="level2">
+<h2 class="anchored" data-anchor-id="zależność-pomiędzy-masą-a-wynikiem-total.">4.1 Zależność pomiędzy masą a wynikiem total.</h2>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Wykres rozproszenia "</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"total"</span>, <span class="at">color =</span> <span class="st">"płeć"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Celem lepszej analizy zależności dokonamy teraz uśrednienia zmiennej <strong>Total</strong> po zawodnikach tej samej płci o tej samej masie.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>probka_mean <span class="ot">&lt;-</span> probka <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(masa, plec) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_total =</span> <span class="fu">mean</span>(total))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only unique values of "masa"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>probka_mean_unique <span class="ot">&lt;-</span> probka_mean <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(masa, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot with color by "plec" and mean points</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka_mean_unique, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> mean_total, <span class="at">color =</span> plec)) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatter Plot of masa vs mean_total"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"masa"</span>, <span class="at">y =</span> <span class="st">"mean_total"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="raport_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Współczynniki korelacji pearsona dla całej populacji oraz dla każdej płci z osobna prezentują się następująco.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cor_by_plec <span class="ot">&lt;-</span> probka_mean_unique <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(plec) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">correlation =</span> <span class="fu">cor</span>(masa, total, <span class="at">use =</span> <span class="st">"complete.obs"</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate correlation for the entire data frame</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>cor_total <span class="ot">&lt;-</span> <span class="fu">cor</span>(probka_mean_unique<span class="sc">$</span>masa, probka_mean_unique<span class="sc">$</span>total, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla każdej z płci:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Korelacja pomiędzy masą a wynikiem dla każdej z płci:</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_by_plec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  plec  correlation
+  &lt;fct&gt;       &lt;dbl&gt;
+1 F           0.350
+2 M           0.376</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Korelacja pomiędzy masą a wynikiem dla całej próbki:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Korelacja pomiędzy masą a wynikiem dla całej próbki:</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4438915</code></pre>
+</div>
+</div>
+</section>
 </section>
 
 </main>
