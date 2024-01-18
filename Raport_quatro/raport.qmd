@@ -35,7 +35,7 @@ library(readxl)
 Teraz odczytamy dane z pliku csv.
 
 ```{r}
-dane <- read.csv("../menpowerlifting.csv")
+dane <- read.csv("../powerlifting.csv")
 ```
 
 Jak widać mamy doczynienia z bardzo dużym zbiorem danych.
