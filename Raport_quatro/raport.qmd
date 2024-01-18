@@ -1,5 +1,5 @@
 ---
-title: "Analiza wyników w trójboju"
+title: "Analiza wyników w trójboju siłowym \n Raport 1. Pakiety statystyczne"
 author: "Emil Olszewski, Jakub Kempa"
 date: 2024-01-17
 format: 
@@ -251,3 +251,11 @@ print(cor_by_plec)
 cat("Korelacja pomiędzy masą a wynikiem dla całej próbki:\n")
 print(cor_total)
 ```
+
+Na podstawie powyższych wartości można stwierdzić, że istnieją przesłanki ku stwierdzeniu dodatniej korelacji pomiędzy masą ciała zawodnika a jego wynikami siłowymi niezależnie od płci.
+
+# 5. Podsumowanie 
+
+W wyniku powyższej analizy doszliśmy do następujących wniosków
+
+-   
