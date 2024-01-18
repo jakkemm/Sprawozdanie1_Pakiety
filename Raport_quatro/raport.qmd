@@ -68,7 +68,7 @@ head(probka)
 
 ## 2.1 Transformacje danych
 
-Interesować nas będą tylko zmienne **AgeClass, "Sex"BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg**
+Interesować nas będą tylko zmienne **AgeClass, Sex, BodyweightKg, TotalKg**
 
 ```{r}
 
@@ -79,7 +79,7 @@ summary(probka)
 
 Napotykamy pierwszy problem. Wszystkie zmienne są typu `character`, gdy powinny być typu
 
--   `numeric` dla **BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg, TotalKg**
+-   `numeric` dla **BodyweightKg, TotalKg**
 
 -   `factor` dla **AgeClass** oraz **Sex**
 
