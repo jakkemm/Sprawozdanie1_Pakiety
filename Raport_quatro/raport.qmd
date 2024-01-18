@@ -84,3 +84,61 @@ probka$AgeClass        <- as.factor(probka$AgeClass)
 ```{r}
 summary(probka)
 ```
+
+Dokonamy teraz zmiany nazw kolumn na bardziej przystępne
+
+```{r}
+colnames(probka) <- c("wiek", "masa", "lawka", "przysiad", "martwyciag", "total")
+head(probka)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 10
+#| fig.height: 8
+# Assuming your dataframe is named 'probka'
+# Replace 'probka' with the actual name of your dataframe
+
+library(ggplot2)
+
+par(mfrow = c(3, 2))
+
+# Plot normalized histograms for each level of the "wiek" factor
+
+ggplot(probka, aes(x = wiek, y = ..count.., fill = ..count..)) +
+  geom_bar(color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Wiek") + 
+  theme_minimal()
+
+ggplot(probka, aes(x = masa, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 7, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Masa") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(x = lawka, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 10, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Lawka") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(x = przysiad, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 10, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Przysiad") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(x = martwyciag, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 12, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Martwy Ciag") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 20, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Total") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+```
