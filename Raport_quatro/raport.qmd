@@ -10,17 +10,17 @@ editor: visual
 
 # 1. Wstęp
 
-Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. [Dane](https://gitlab.com/openpowerlifting/opl-data) zostały udostępnione na warunkach licencji **GNU AGPLv3.** Głównymi zmiennymi, które będą nas interesować są **AgeClass** (zmienne kategoryczna określająca przedział wiekowy zawodnika) oraz zmienne ciągłe **BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg** i **TotalKg,** które wyrażają masę ciała zawodnika, wyniki w poszcególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. [Dane](https://gitlab.com/openpowerlifting/opl-data) zostały udostępnione na warunkach licencji **GNU AGPLv3.** Głównymi zmiennymi, które będą nas interesować są **AgeClass, Sex** (zmienne kategoryczne określające przedział wiekowy zawodnika oraz jego płeć) oraz zmienne ciągłe **BodyweightKg, TotalKg,** które wyrażają masę ciała zawodnika, oraz wynik całkowity będący sumą wyników w poszczególnych bojach (*przysiad ze stangą, wyciskanie na ławce* oraz *martwy ciąg)*.
 
 ## 1.1 Pytania badawcze
 
 W ramach analizy postaramy się odpowiedzieć na następujące pytania:
 
-1.  Czy istnieje zależność między wagą a wynikami w poszczególnych bojach?
+1.  Czy istnieje zależność między wagą a wynikiem całkowitym?
 
 2.  Jakie parametry opisują rozkłady poszczególnych zmiennych?
 
-3.  W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od wieku?
+3.  W jaki sposób różnią się rozkłady wyniku oraz wagi w zależności od wieku i płci?
 
 # 2. Ładowanie danych
 
@@ -29,25 +29,18 @@ Wpierw przystąpimy do załadowania potrzebnych bibliotek
 ```{r}
 #| warning: false
 library(tidyverse)
-library(readxl)
 ```
 
 Teraz odczytamy dane z pliku csv.
 
 ```{r}
-dane <- read.csv("../powerlifting.csv")
+probka <- read.csv("../powerlifting.csv")
 ```
 
-Jak widać mamy doczynienia z bardzo dużym zbiorem danych.
+Będziemy poddawać analizie próbkę o długości 50 000 obserwacji.
 
 ```{r}
-dim(dane)
-```
-
-Tym samym w celu dalszej analizy wygenerujemy losową próbkę o długości 5000
-
-```{r}
-probka <- sample_n(dane, 5000)
+nrow(probka)
 ```
 
 Tak się prezentuje 10 początkowych obserwacji
@@ -58,11 +51,11 @@ head(probka)
 
 ## 2.1 Transformacje danych
 
-Interesować nas będą tylko zmienne **AgeClass, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg**
+Interesować nas będą tylko zmienne **AgeClass, "Sex"BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg**
 
 ```{r}
 
-probka <- probka[, c("AgeClass", "BodyweightKg", "Best3BenchKg", "Best3SquatKg", "Best3DeadliftKg", "TotalKg")]
+probka <- probka[, c("AgeClass", "Sex", "BodyweightKg", "TotalKg")]
 
 summary(probka)
 ```
@@ -71,18 +64,16 @@ Napotykamy pierwszy problem. Wszystkie zmienne są typu `character`, gdy powinny
 
 -   `numeric` dla **BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg, TotalKg**
 
--   `factor` dla **AgeClass**
+-   `factor` dla **AgeClass** oraz **Sex**
 
 Dokonajmy więc konwersji
 
 ```{r}
-probka$BodyweightKg    <- as.numeric(probka$BodyweightKg)
-probka$Best3BenchKg    <- as.numeric(probka$Best3BenchKg)
-probka$Best3SquatKg    <- as.numeric(probka$Best3SquatKg)
-probka$Best3DeadliftKg <- as.numeric(probka$Best3DeadliftKg)
-probka$TotalKg         <- as.numeric(probka$TotalKg)
+probka$BodyweightKg <- as.numeric(probka$BodyweightKg)
+probka$TotalKg      <- as.numeric(probka$TotalKg)
 
-probka$AgeClass        <- as.factor(probka$AgeClass)
+probka$AgeClass     <- as.factor(probka$AgeClass)
+probka$Sex          <- as.factor(probka$Sex)
 ```
 
 ```{r}
@@ -92,7 +83,7 @@ summary(probka)
 Dokonamy teraz zmiany nazw kolumn na bardziej przystępne
 
 ```{r}
-colnames(probka) <- c("wiek", "masa", "lawka", "przysiad", "martwyciag", "total")
+colnames(probka) <- c("wiek", "plec", "masa", "total")
 head(probka)
 ```
 
@@ -101,9 +92,7 @@ head(probka)
 ```{r}
 #| code-fold: true
 #| warning: false
-#| layout-ncol: 3
-# Assuming your dataframe is named 'probka'
-# Replace 'probka' with the actual name of your dataframe
+#| layout-ncol: 2
 
 # Plot normalized histograms for each level of the "wiek" factor
 
@@ -112,27 +101,14 @@ ggplot(probka, aes(x = wiek, y = ..count.., fill = ..count..)) +
   ggtitle("Histogram - Wiek") + 
   theme_minimal()
 
+ggplot(probka, aes(x = plec, y = ..count.., fill = ..count..)) +
+  geom_bar(color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Wiek") + 
+  theme_minimal()
+
 ggplot(probka, aes(x = masa, y = ..density.., fill = ..density..)) +
   geom_histogram(binwidth = 7, color = "black", alpha = 0.7, position = "identity") +
   ggtitle("Histogram - Masa") +
-  theme_minimal() +
-  scale_y_continuous(labels = scales::percent_format(scale = 1))
-
-ggplot(probka, aes(x = lawka, y = ..density.., fill = ..density..)) +
-  geom_histogram(binwidth = 10, color = "black", alpha = 0.7, position = "identity") +
-  ggtitle("Histogram - Lawka") +
-  theme_minimal() +
-  scale_y_continuous(labels = scales::percent_format(scale = 1))
-
-ggplot(probka, aes(x = przysiad, y = ..density.., fill = ..density..)) +
-  geom_histogram(binwidth = 10, color = "black", alpha = 0.7, position = "identity") +
-  ggtitle("Histogram - Przysiad") +
-  theme_minimal() +
-  scale_y_continuous(labels = scales::percent_format(scale = 1))
-
-ggplot(probka, aes(x = martwyciag, y = ..density.., fill = ..density..)) +
-  geom_histogram(binwidth = 12, color = "black", alpha = 0.7, position = "identity") +
-  ggtitle("Histogram - Martwy Ciag") +
   theme_minimal() +
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 
