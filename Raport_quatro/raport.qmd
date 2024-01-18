@@ -114,7 +114,7 @@ probka <- probka %>% drop_na()
 
 Dzięki temu otrzymujemy zestaw danych, który swobodnie może być poddawanym analizom.
 
-# 3. Analiza jednowymiarowa 
+# 3. Analiza jednowymiarowa
 
 W tej części zajmiemy się analizą statystyczną wybranych przez nas kategorii. Zmienne kategoryczne mają ograniczone możliwości co do analizy, dlatego ograniczymy się do histogramu i przedstawienia liczności.
 
@@ -211,7 +211,9 @@ knitr::kable(summary_df)
 
 Wartość mediany jest zbliżona do wartości średniej, co wskazuje na dość dużą symetryczność rozkładu. Brak ich pokrycia wynika z istnienia wartości odstających. Skośność większa od 0 wskazuje na prawoskośność, co zgadza się z wnioskami odnośnie histogramu oraz jego wyglądem. Kurtoza nadwyżkowa większa od 0 oznacza, że rozkład jest leptokurtyczny. Istnieje jednak wiele podobieństw pomiędzy rozkładem mas zawodników oraz rozkładem normalnym. Rozbieżność występuje prawdopodobnie ze względu na niestandardowe warunki, którymi są zawody w trójboju siłowym. Zbiorem danych są sportowcy, a nie losowa grupa ludzi, przez co rozkład masy zawodników może bardziej różnić się od rozkładu normalnego, niż losowa próba z populacji.
 
-## 3.4 Zmienna: Łączny wynik
+## 3.4 Zmienna: *Total*
+
+Dla tej zmiennej ciągłej również możemy narysować histogram, wykres pudełkowy oraz policzyć wartości wybranych statystyk.
 
 ```{r}
 #| code-fold: true
@@ -233,6 +235,8 @@ ggplot(probka, aes(y = total)) +
 
 ```
 
+Na boxplocie widzimy znacznie mniej wartości odstających, niż dla zmiennej **masa**. Jest to spowodowane większą koncentracją danych i zwiększeniem rozstępu międzykwartylowego - zawodnicy są na podobnym poziomie, z pojedynczymi jednostkami wybitnymi. Histogram przypomina rozkład prawoskośny i jest niesymetryczny ze względu na swoje dwa *szczyty.*
+
 ```{r}
 #| code-fold: true
 #| tbl-cap: "Tabela przedstawiająca zbiór wartości poszczególnych statystyk"
@@ -243,6 +247,8 @@ summary_df <- data.frame(
 )
 knitr::kable(summary_df)
 ```
+
+Wartość mediany jest ponownie zbliżona do średniej, jednak wygląd histogramu wyklucza symetryczność rozkładu. Skośność, podobnie jak dla **masy** jest większa od 0, potwierdzając prawoskośność. Kurtoza nadwyżkowa tym razem spada poniżej zera, co oznacza platykurtyczność. W wypadku tych danych można odrzucić hipotezę o podobieństwie do rozkładu normalnego. Powodów może być kilka, przy czym najbardziej przekonującym jest zróżnicowanie. Wybieramy spośród sportowców, którzy mają różne programy treningowe, różne możliwości fizyczne, podantości na kontuzje, zdolności. Dodatkowo analizujemy tylko i wyłącznie tych, którzy konkurują w podnosieniu ciężarów. Prawdopodobnie inaczej wyglądałby wykres, gdyby móc przeanalizować dane dla *wszystkich* trójboistów - znacznie inaczej, gdyby przeanalizować również dane ludzi, którzy trójboju nie trenują. Ponadto dłuższy jest prawy ogon, ponieważ w trójboju raczej częściej będą zdarzać się jednostki wybitne, niż tragiczne. Wszyscy zadownicy są na podobnym poziomie, a jeśli już zdarzy się jakaś wartość odstająca, to raczej będzie lepsza od reszty, niż gorsza.
 
 # 4. Rozkłady warunkowe
 
