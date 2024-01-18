@@ -2,7 +2,9 @@
 title: "Analiza wyników w trójboju"
 author: "Emil Olszewski, Jakub Kempa"
 date: 2024-01-17
-format: html
+format: 
+  html:
+    page-layout: full
 editor: visual
 ---
 
@@ -95,14 +97,9 @@ head(probka)
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 10
-#| fig.height: 8
+#| layout-ncol: 3
 # Assuming your dataframe is named 'probka'
 # Replace 'probka' with the actual name of your dataframe
-
-library(ggplot2)
-
-par(mfrow = c(3, 2))
 
 # Plot normalized histograms for each level of the "wiek" factor
 

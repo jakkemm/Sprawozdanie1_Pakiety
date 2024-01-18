@@ -73,11 +73,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
 
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -159,55 +159,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                     Name Sex Event Equipment  Age AgeClass BirthYearClass
-1 Eduardo Flores Carrasco   M   SBD       Raw 17.0    16-17          14-18
-2            Igor Mesitov   M   SBD       Raw 26.0    24-34          24-39
-3         Daniil Kondykov   M   SBD       Raw 13.5    13-15          14-18
-4             Henri Vauto   M   SBD       Raw 33.5    24-34          24-39
-5        Loren Nienajadlo   M   SBD       Raw   NA    13-15               
-6           Kasper Bugaji   M   SBD       Raw   NA                        
-     Division BodyweightKg WeightClassKg Squat1Kg Squat2Kg Squat3Kg Squat4Kg
-1   Subjunior        64.75            66      145      160      165       NA
-2    Pro Open        87.30            90      130     -140      145       NA
-3 Sub-Juniors        85.30           83+       NA       NA       NA       NA
-4        Open        81.91            83      200      220      230       NA
-5       12-13        44.00            44       NA       NA       NA       NA
-6        Open        99.90           105       NA       NA       NA       NA
+<pre><code>             Name Sex Event Equipment  Age AgeClass BirthYearClass
+1   Valentin Soto   M   SBD       Raw 30.0    24-34          24-39
+2 Steffen Burghar   M   SBD       Raw 64.0    60-64          60-69
+3  Gareth Murchie   M   SBD       Raw   NA                        
+4  Miha Jovanović   M   SBD       Raw 21.0    20-23          19-23
+5         Qing Li   M   SBD       Raw 18.5    18-19          19-23
+6     Jack Lysell   M   SBD       Raw 24.0    24-34          24-39
+       Division BodyweightKg WeightClassKg Squat1Kg Squat2Kg Squat3Kg Squat4Kg
+1          Open       106.20           110   -250.0    252.5    262.5       NA
+2 Masters 60-64        71.80            75    140.0    150.0    160.0       NA
+3      M-C-Open        82.40            83    140.0    150.0    160.0       NA
+4          Open       101.40           110    200.0    215.0   -225.0       NA
+5          MR-O        66.76          67.5    125.0   -140.0   -140.0       NA
+6          Open        98.30           100    182.5    202.5    215.0       NA
   Best3SquatKg Bench1Kg Bench2Kg Bench3Kg Bench4Kg Best3BenchKg Deadlift1Kg
-1       165.00    -87.5       90     92.5       NA        92.50         180
-2       145.00    110.0      120   -125.0       NA       120.00         160
-3        75.00       NA       NA       NA       NA        50.00          NA
-4       230.00    140.0      150   -152.5       NA       150.00         225
-5        28.12       NA       NA       NA       NA        20.41          NA
-6       235.00       NA       NA       NA       NA       155.00          NA
+1        262.5    187.5   -192.5   -192.5       NA        187.5       290.0
+2        160.0     92.5     95.0    -97.5       NA         95.0       140.0
+3        160.0    115.0    122.5    130.0       NA        130.0       215.0
+4        215.0    150.0   -165.0   -165.0       NA        150.0       250.0
+5        125.0    110.0    120.0   -125.0       NA        120.0       130.0
+6        215.0    135.0    142.5    147.5       NA        147.5       237.5
   Deadlift2Kg Deadlift3Kg Deadlift4Kg Best3DeadliftKg TotalKg Place   Dots
-1         195       202.5          NA           202.5  460.00     2 365.62
-2         175       185.0          NA           185.0  450.00     1 295.56
-3          NA          NA          NA           105.0  230.00     3 152.95
-4         245      -255.0          NA           245.0  625.00     5 425.10
-5          NA          NA          NA            49.9   98.43     1 111.95
-6          NA          NA          NA           247.5  637.50     1 392.56
-   Wilks Glossbrenner Goodlift Tested Country State Federation ParentFederation
-1 366.98       356.92    72.44    Yes                  FECHIPO              IPF
-2 291.90       280.14    60.73                         WPC-RUS              WPC
-3 151.12       145.18    31.40    Yes                      FPR              IPF
-4 420.51       404.74    87.10    Yes Finland             SVNL              IPF
-5 116.60       115.67    19.07                            RAWU                 
-6 388.13       370.71    80.57    Yes  Canada    ON        CPU              IPF
-        Date MeetCountry MeetState    MeetTown
-1 2023-06-10       Chile                      
-2 2014-09-27      Russia       KLU      Kaluga
-3 2013-11-22      Russia       CHE Chelyabinsk
-4 2020-03-13     Finland                  Oulu
-5 2015-11-05         USA        FL       Tampa
-6 2017-03-25      Canada        ON    Courtice
-                                                   MeetName
-1                                   VII Campeonato Nacional
-2                                                Adrenaline
-3 Chelyabinsk City Youth Classic Powerlifting Championships
-4                            Klassisen voimanoston SM-kisat
-5                                 Tony Conyers Extravaganza
-6                                             Invictus Open</code></pre>
+1         300      -307.5          NA             300   750.0     1 450.27
+2         150       160.0          NA             160   415.0     1 306.37
+3         225       230.0          NA             230   520.0     1 352.49
+4         255          NA          NA             255   620.0     3 379.35
+5         150       165.0          NA             165   410.0     1 318.55
+6         250          NA          NA             250   612.5     4 379.85
+   Wilks Glossbrenner Goodlift Tested  Country State    Federation
+1 446.41       426.33    92.11    Yes      USA    NV          USPA
+2 305.11       295.36    61.89                           PAGermany
+3 348.60       335.44    72.25    Yes  England    NM           EPA
+4 375.27       358.36    77.81        Slovenia       WRPF-Slovenia
+5 318.94       309.75    63.53    Yes    China               USAPL
+6 375.38       358.65    78.01             USA    TX          USPA
+  ParentFederation       Date MeetCountry MeetState    MeetTown
+1              IPL 2023-09-09         USA        NV   Las Vegas
+2              WPF 2015-05-01     Germany                Coburg
+3              IPF 2019-04-27     England                      
+4             WRPF 2023-10-28    Slovenia           Škofja Loka
+5                  2023-07-29       China                      
+6              IPL 2020-12-05         USA        MO Kansas City
+                                                    MeetName
+1                                 Drug Tested Desert Rampage
+2 Deutsche Meisterschaften im KDK Bankdrücken und Kreuzheben
+3                        North Midlands Spring Championships
+4                        4. slovensko powerlifting prvenstvo
+5                                    Southwest Championships
+6                                            Only the Strong</code></pre>
 </div>
 </div>
 <p>Interesować nas będą tylko zmienne <strong>AgeClass, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg</strong></p>
@@ -217,21 +217,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   AgeClass          BodyweightKg     Best3BenchKg    Best3SquatKg  
- Length:5000        Min.   : 25.89   Min.   : 15.0   Min.   : 25.0  
- Class :character   1st Qu.: 74.00   1st Qu.:100.0   1st Qu.:150.0  
- Mode  :character   Median : 85.90   Median :117.5   Median :180.0  
-                    Mean   : 87.68   Mean   :119.1   Mean   :178.1  
-                    3rd Qu.: 98.20   3rd Qu.:140.0   3rd Qu.:207.5  
-                    Max.   :204.00   Max.   :245.0   Max.   :382.5  
-                                     NA's   :5       NA's   :6      
- Best3DeadliftKg    TotalKg      
- Min.   : 25.0   Min.   :  90.0  
- 1st Qu.:182.5   1st Qu.: 435.0  
- Median :210.0   Median : 507.5  
- Mean   :208.7   Mean   : 505.6  
- 3rd Qu.:237.5   3rd Qu.: 577.5  
- Max.   :450.0   Max.   :1025.0  
- NA's   :6                       </code></pre>
+ Length:5000        Min.   : 23.40   Min.   : 12.0   Min.   : 16.5  
+ Class :character   1st Qu.: 74.39   1st Qu.:100.0   1st Qu.:152.5  
+ Mode  :character   Median : 86.80   Median :120.0   Median :180.0  
+                    Mean   : 87.94   Mean   :120.3   Mean   :180.0  
+                    3rd Qu.: 98.30   3rd Qu.:140.0   3rd Qu.:210.0  
+                    Max.   :196.70   Max.   :252.5   Max.   :365.5  
+                                     NA's   :4       NA's   :4      
+ Best3DeadliftKg    TotalKg     
+ Min.   : 31.0   Min.   : 59.5  
+ 1st Qu.:182.5   1st Qu.:442.0  
+ Median :212.5   Median :512.5  
+ Mean   :210.5   Mean   :510.7  
+ 3rd Qu.:240.0   3rd Qu.:585.0  
+ Max.   :355.0   Max.   :922.5  
+ NA's   :2                      </code></pre>
 </div>
 </div>
 <p>Napotykamy pierwszy problem. Wszystkie zmienne są typu <code>character</code>, gdy powinny być typu</p>
@@ -253,21 +253,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    AgeClass     BodyweightKg     Best3BenchKg    Best3SquatKg  
- 24-34  :1425   Min.   : 25.89   Min.   : 15.0   Min.   : 25.0  
- 20-23  :1082   1st Qu.: 74.00   1st Qu.:100.0   1st Qu.:150.0  
-        : 838   Median : 85.90   Median :117.5   Median :180.0  
- 18-19  : 540   Mean   : 87.68   Mean   :119.1   Mean   :178.1  
- 16-17  : 380   3rd Qu.: 98.20   3rd Qu.:140.0   3rd Qu.:207.5  
- 35-39  : 190   Max.   :204.00   Max.   :245.0   Max.   :382.5  
- (Other): 545                    NA's   :5       NA's   :6      
- Best3DeadliftKg    TotalKg      
- Min.   : 25.0   Min.   :  90.0  
- 1st Qu.:182.5   1st Qu.: 435.0  
- Median :210.0   Median : 507.5  
- Mean   :208.7   Mean   : 505.6  
- 3rd Qu.:237.5   3rd Qu.: 577.5  
- Max.   :450.0   Max.   :1025.0  
- NA's   :6                       </code></pre>
+ 24-34  :1459   Min.   : 23.40   Min.   : 12.0   Min.   : 16.5  
+ 20-23  :1044   1st Qu.: 74.39   1st Qu.:100.0   1st Qu.:152.5  
+        : 890   Median : 86.80   Median :120.0   Median :180.0  
+ 18-19  : 513   Mean   : 87.94   Mean   :120.3   Mean   :180.0  
+ 16-17  : 363   3rd Qu.: 98.30   3rd Qu.:140.0   3rd Qu.:210.0  
+ 35-39  : 203   Max.   :196.70   Max.   :252.5   Max.   :365.5  
+ (Other): 528                    NA's   :4       NA's   :4      
+ Best3DeadliftKg    TotalKg     
+ Min.   : 31.0   Min.   : 59.5  
+ 1st Qu.:182.5   1st Qu.:442.0  
+ Median :212.5   Median :512.5  
+ Mean   :210.5   Mean   :510.7  
+ 3rd Qu.:240.0   3rd Qu.:585.0  
+ Max.   :355.0   Max.   :922.5  
+ NA's   :2                      </code></pre>
 </div>
 </div>
 <p>Dokonamy teraz zmiany nazw kolumn na bardziej przystępne</p>
@@ -275,89 +275,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(probka) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wiek"</span>, <span class="st">"masa"</span>, <span class="st">"lawka"</span>, <span class="st">"przysiad"</span>, <span class="st">"martwyciag"</span>, <span class="st">"total"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   wiek  masa  lawka przysiad martwyciag  total
-1 16-17 64.75  92.50   165.00      202.5 460.00
-2 24-34 87.30 120.00   145.00      185.0 450.00
-3 13-15 85.30  50.00    75.00      105.0 230.00
-4 24-34 81.91 150.00   230.00      245.0 625.00
-5 13-15 44.00  20.41    28.12       49.9  98.43
-6       99.90 155.00   235.00      247.5 637.50</code></pre>
+<pre><code>   wiek   masa lawka przysiad martwyciag total
+1 24-34 106.20 187.5    262.5        300 750.0
+2 60-64  71.80  95.0    160.0        160 415.0
+3        82.40 130.0    160.0        230 520.0
+4 20-23 101.40 150.0    215.0        255 620.0
+5 18-19  66.76 120.0    125.0        165 410.0
+6 24-34  98.30 147.5    215.0        250 612.5</code></pre>
 </div>
 </div>
-<div class="cell">
+<div>
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming your dataframe is named 'probka'</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 'probka' with the actual name of your dataframe</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot normalized histograms for each level of the "wiek" factor</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>))</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot normalized histograms for each level of the "wiek" factor</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Wiek"</span>) <span class="sc">+</span> </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> ..count.., <span class="at">fill =</span> ..count..)) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Wiek"</span>) <span class="sc">+</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> lawka, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Lawka"</span>) <span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> przysiad, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Przysiad"</span>) <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> martwyciag, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">12</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Martwy Ciag"</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="960"></p>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="960"></p>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> lawka, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Lawka"</span>) <span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="960"></p>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> przysiad, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Przysiad"</span>) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="960"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> martwyciag, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">12</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Martwy Ciag"</span>) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid" width="960"></p>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="672"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="raport_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid" width="960"></p>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </div>
 </div>
 </section>
