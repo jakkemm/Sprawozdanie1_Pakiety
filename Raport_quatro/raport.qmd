@@ -5,6 +5,10 @@ date: 2024-01-17
 format: 
   html:
     page-layout: full
+    grid:
+      sidebar-width: 100px
+      margin-width: 100px
+      body-width: 1200px
 editor: visual
 ---
 
@@ -87,6 +91,8 @@ colnames(probka) <- c("wiek", "plec", "masa", "total")
 head(probka)
 ```
 
+Na sam koniec posortujemy jeszcze kolumnę wiek w kolejności rosnącej
+
 # 3. Histogramy
 
 ```{r}
@@ -118,6 +124,48 @@ ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
   theme_minimal() +
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 
+```
+
+## 3.1. Rozkłady warunkowe 
+
+Na wykresach poniżej znajdują się rozkłady zmiennych **Masa** oraz **Total** warunkowane zmienną **Płeć.** Z wykresów możemy zauważyć ewidentną **bimodalność** zmiennej **Total** dla określonej płci.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| layout-ncol: 2
+ggplot(probka, aes(x = masa, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 7, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Masa") +
+  theme_minimal() +
+  facet_grid(plec ~ ., scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 20, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Total") +
+  theme_minimal() +
+  facet_grid(plec ~ ., scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+```
+
+Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych **Masa** i **Total** warunkowane zmienną **Wiek.** Przypatrując się rozkładom zmiennej **Total** widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej **Total** warunkowanej **Wiekiem.** Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku.
+
+Patrząc zaś na boxploty opisujące **masę** zawodnika widzimy wiele wartości skrajnych większych niż $Q_3 + 1,5\,\text{IQR}$ co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się **kategorie wagowe** aby zwodnicy konkurowali z rywalami do siebie podobnymi**.** Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| layout-ncol: 2
+ggplot(probka, aes(x = wiek, y = masa, fill = wiek)) +
+  geom_boxplot() +
+  ggtitle("Wykresy pudełkowe masy warunkowanej wiekiem") +
+  theme_minimal()
+
+ggplot(probka, aes(x = wiek, y = total, fill = wiek)) +
+  geom_boxplot() +
+  ggtitle("Wykresy pudełkowe wyniku total warunkowanego wiekiem") +
+  theme_minimal()
 ```
 
 # 4. Analiza zależności

@@ -70,6 +70,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="raport_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="raport_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -135,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 50000</code></pre>
+<pre><code>[1] 49999</code></pre>
 </div>
 </div>
 <p>Tak się prezentuje 10 początkowych obserwacji</p>
@@ -202,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   AgeClass             Sex             BodyweightKg       TotalKg      
- Length:50000       Length:50000       Min.   : 20.00   Min.   :  12.5  
+ Length:49999       Length:49999       Min.   : 20.00   Min.   :  12.5  
  Class :character   Class :character   1st Qu.: 67.20   1st Qu.: 204.1  
  Mode  :character   Mode  :character   Median : 81.90   Median : 356.1  
                                        Mean   : 84.12   Mean   : 378.3  
@@ -227,14 +229,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    AgeClass     Sex         BodyweightKg       TotalKg      
-        :13419   F :12515   Min.   : 20.00   Min.   :  12.5  
- 24-34  :10615   M :37484   1st Qu.: 67.20   1st Qu.: 204.1  
- 20-23  : 6007   Mx:    1   Median : 81.90   Median : 356.1  
- 18-19  : 4300              Mean   : 84.12   Mean   : 378.3  
- 16-17  : 3383              3rd Qu.: 98.79   3rd Qu.: 533.0  
- 35-39  : 2819              Max.   :241.10   Max.   :1250.0  
- (Other): 9457              NA's   :644      NA's   :3339    </code></pre>
+<pre><code>    AgeClass     Sex        BodyweightKg       TotalKg      
+        :13418   F:12515   Min.   : 20.00   Min.   :  12.5  
+ 24-34  :10615   M:37484   1st Qu.: 67.20   1st Qu.: 204.1  
+ 20-23  : 6007             Median : 81.90   Median : 356.1  
+ 18-19  : 4300             Mean   : 84.12   Mean   : 378.3  
+ 16-17  : 3383             3rd Qu.: 98.79   3rd Qu.: 533.0  
+ 35-39  : 2819             Max.   :241.10   Max.   :1250.0  
+ (Other): 9457             NA's   :644      NA's   :3339    </code></pre>
 </div>
 </div>
 <p>Dokonamy teraz zmiany nazw kolumn na bardziej przystępne</p>
@@ -251,6 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6          F  82.1     NA</code></pre>
 </div>
 </div>
+<p>Na sam koniec posortujemy jeszcze kolumnę wiek w kolejności rosnącej</p>
 </section>
 </section>
 <section id="histogramy" class="level1">
@@ -298,6 +301,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<section id="rozkłady-warunkowe" class="level2">
+<h2 class="anchored" data-anchor-id="rozkłady-warunkowe">3.1. Rozkłady warunkowe</h2>
+<p>Na wykresach poniżej znajdują się rozkłady zmiennych <strong>Masa</strong> oraz <strong>Total</strong> warunkowane zmienną <strong>Płeć.</strong> Z wykresów możemy zauważyć ewidentną <strong>bimodalność</strong> zmiennej <strong>Total</strong> dla określonej płci.</p>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> masa, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">7</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Masa"</span>) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> total, <span class="at">y =</span> ..density.., <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histogram - Total"</span>) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(plec <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong> Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku.</p>
+<p>Patrząc zaś na boxploty opisujące <strong>masę</strong> zawodnika widzimy wiele wartości skrajnych większych niż <span class="math inline">\(Q_3 + 1,5\,\text{IQR}\)</span> co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się <strong>kategorie wagowe</strong> aby zwodnicy konkurowali z rywalami do siebie podobnymi<strong>.</strong> Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.</p>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> masa, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe masy warunkowanej wiekiem"</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(probka, <span class="fu">aes</span>(<span class="at">x =</span> wiek, <span class="at">y =</span> total, <span class="at">fill =</span> wiek)) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Wykresy pudełkowe wyniku total warunkowanego wiekiem"</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="raport_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="analiza-zależności" class="level1">
 <h1>4. Analiza zależności</h1>
