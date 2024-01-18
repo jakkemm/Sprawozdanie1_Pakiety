@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -120,22 +120,113 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od płci?</p></li>
 </ol>
 </section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section id="ładowanie-danych" class="level2">
+<h2 class="anchored" data-anchor-id="ładowanie-danych">Ładowanie danych</h2>
+<p>Wpierw przystąpimy do załadowania potrzebnych bibliotek</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
 <p>You can add options to executable code like this</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dane <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../dane.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Jak widać mamy doczynienia z bardzo dużym zbiorem danych.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code>[1] 158266     41</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+<p>Tym samym w celu dalszej analizy wygenerujemy losową próbkę o długości 5000</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dane, <span class="dv">5000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Tak się prezentuje 10 początkowych obserwacji</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 41
+  Name              Sex   Event Equipment Age   AgeClass BirthYearClass Division
+  &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;   
+1 Vladimir Dumanaev M     SBD   Raw       16.5  16-17    14-18          Sub-Jun…
+2 Lukas Demey       M     SBD   Raw       &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;           Open    
+3 Jason Wei         M     SBD   Raw       18.5  18-19    19-23          MR-C    
+4 Jim Morrow        M     SBD   Raw       40.0  40-44    40-49          Masters…
+5 Mika Behrens      M     SBD   Raw       14.5  13-15    14-18          Youth B 
+6 Luke Janosky      M     SBD   Raw       23.5  24-34    24-39          MR-O    
+# ℹ 33 more variables: BodyweightKg &lt;chr&gt;, WeightClassKg &lt;chr&gt;, Squat1Kg &lt;chr&gt;,
+#   Squat2Kg &lt;chr&gt;, Squat3Kg &lt;chr&gt;, Squat4Kg &lt;chr&gt;, Best3SquatKg &lt;chr&gt;,
+#   Bench1Kg &lt;chr&gt;, Bench2Kg &lt;chr&gt;, Bench3Kg &lt;chr&gt;, Bench4Kg &lt;chr&gt;,
+#   Best3BenchKg &lt;chr&gt;, Deadlift1Kg &lt;chr&gt;, Deadlift2Kg &lt;chr&gt;,
+#   Deadlift3Kg &lt;chr&gt;, Deadlift4Kg &lt;chr&gt;, Best3DeadliftKg &lt;chr&gt;, TotalKg &lt;chr&gt;,
+#   Place &lt;dbl&gt;, Dots &lt;chr&gt;, Wilks &lt;chr&gt;, Glossbrenner &lt;chr&gt;, Goodlift &lt;chr&gt;,
+#   Tested &lt;chr&gt;, Country &lt;chr&gt;, State &lt;chr&gt;, Federation &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p>Interesować nas będą tylko zmienne <strong>Age, Sex, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka[, <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Sex"</span>, <span class="st">"BodyweightKg"</span>, <span class="st">"Best3BenchKg"</span>, <span class="st">"Best3SquatKg"</span>, <span class="st">"Best3DeadliftKg"</span>, <span class="st">"TotalKg"</span>)]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Age                Sex            BodyweightKg       Best3BenchKg      
+ Length:5000        Length:5000        Length:5000        Length:5000       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+ Best3SquatKg       Best3DeadliftKg      TotalKg         
+ Length:5000        Length:5000        Length:5000       
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  </code></pre>
+</div>
+</div>
+<p>Napotykamy pierwszy problem. Wszystkie zmienne są typu <code>character</code>, gdy powinny być typu</p>
+<ul>
+<li><p><code>numeric</code> dla <strong>Age, BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg, TotalKg</strong></p></li>
+<li><p><code>factor</code> dla <strong>Sex</strong></p></li>
+</ul>
+<p>Dokonajmy więc konwersji</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Age             <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Age)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>BodyweightKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Age)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3BenchKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3BenchKg)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3SquatKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3SquatKg)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3DeadliftKg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3DeadliftKg)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>TotalKg         <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>TotalKg)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Sex             <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>Sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Age        Sex       BodyweightKg    Best3BenchKg    Best3SquatKg   
+ Min.   : 8.50   M:5000   Min.   : 8.50   Min.   : 20.0   Min.   : 24.95  
+ 1st Qu.:19.00            1st Qu.:19.00   1st Qu.:100.0   1st Qu.:150.00  
+ Median :23.00            Median :23.00   Median :120.0   Median :180.00  
+ Mean   :25.73            Mean   :25.73   Mean   :118.9   Mean   :177.93  
+ 3rd Qu.:29.00            3rd Qu.:29.00   3rd Qu.:140.0   3rd Qu.:207.50  
+ Max.   :85.00            Max.   :85.00   Max.   :250.0   Max.   :365.00  
+ NA's   :962              NA's   :962     NA's   :4       NA's   :7       
+ Best3DeadliftKg     TotalKg     
+ Min.   : 24.95   Min.   : 75.0  
+ 1st Qu.:182.50   1st Qu.:437.5  
+ Median :210.00   Median :507.5  
+ Mean   :208.77   Mean   :505.5  
+ 3rd Qu.:240.00   3rd Qu.:580.0  
+ Max.   :375.00   Max.   :957.5  
+ NA's   :4                       </code></pre>
+</div>
+</div>
 </section>
 </section>
 
