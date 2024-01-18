@@ -35,7 +35,7 @@ library(readxl)
 You can add options to executable code like this
 
 ```{r}
-dane <- read.csv("../menpowerlifting.csv")
+dane <- read.csv("../powerlifting.csv")
 ```
 
 Jak widać mamy doczynienia z bardzo dużym zbiorem danych.
