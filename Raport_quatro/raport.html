@@ -471,7 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="zmienna-waga-zawodnika" class="level2">
-<h2 class="anchored" data-anchor-id="zmienna-waga-zawodnika">2.3 Zmienna: <em>Waga zawodnika</em></h2>
+<h2 class="anchored" data-anchor-id="zmienna-waga-zawodnika">3.3 Zmienna: <em>Waga zawodnika</em></h2>
 <p>Dla tej zmiennej ciągłej można już przeprowadzić szereg analiz statystycznych oraz narysować wykres pudełkowy.</p>
 <div>
 <details>
@@ -581,7 +581,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Wartość mediany jest zbliżona do wartości średniej, co wskazuje na dość dużą symetryczność rozkładu. Brak ich pokrycia wynika z istnienia wartości odstających. Skośność większa od 0 wskazuje na prawoskośność, co zgadza się z wnioskami odnośnie histogramu oraz jego wyglądem. Kurtoza nadwyżkowa większa od 0 oznacza, że rozkład jest leptokurtyczny. Istnieje jednak wiele podobieństw pomiędzy rozkładem mas zawodników oraz rozkładem normalnym. Rozbieżność występuje prawdopodobnie ze względu na niestandardowe warunki, którymi są zawody w trójboju siłowym. Zbiorem danych są sportowcy, a nie losowa grupa ludzi, przez co rozkład masy zawodników może bardziej różnić się od rozkładu normalnego, niż losowa próba z populacji.</p>
 </section>
 <section id="zmienna-łączny-wynik" class="level2">
-<h2 class="anchored" data-anchor-id="zmienna-łączny-wynik">2.4 Zmienna: Łączny wynik</h2>
+<h2 class="anchored" data-anchor-id="zmienna-łączny-wynik">3.4 Zmienna: Łączny wynik</h2>
 <div>
 <details>
 <summary>Code</summary>
@@ -686,10 +686,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="rozkłady-warunkowe" class="level2">
-<h2 class="anchored" data-anchor-id="rozkłady-warunkowe">3.1. Rozkłady warunkowe</h2>
-<section id="rozkłady-zmiennych-warunkowane-płcią" class="level3">
-<h3 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-płcią">3.1.1. Rozkłady zmiennych warunkowane płcią</h3>
+</section>
+<section id="rozkłady-warunkowe" class="level1">
+<h1>4. Rozkłady warunkowe</h1>
+<section id="rozkłady-zmiennych-warunkowane-płcią" class="level2">
+<h2 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-płcią">4.1. Rozkłady zmiennych warunkowane płcią</h2>
 <p>Na wykresach poniżej znajdują się rozkłady zmiennych <strong>Masa</strong> oraz <strong>Total</strong> warunkowane zmienną <strong>Płeć.</strong> Z wykresów możemy zauważyć ewidentną <strong>bimodalność</strong> zmiennej <strong>Total</strong> dla określonej płci.</p>
 <div>
 <details>
@@ -727,8 +728,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="rozkłady-zmiennych-warunkowane-wiekiem." class="level3">
-<h3 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-wiekiem.">3.1.2. Rozkłady zmiennych warunkowane wiekiem.</h3>
+<section id="rozkłady-zmiennych-warunkowane-wiekiem." class="level2">
+<h2 class="anchored" data-anchor-id="rozkłady-zmiennych-warunkowane-wiekiem.">4.2. Rozkłady zmiennych warunkowane wiekiem.</h2>
 <p>Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych <strong>Masa</strong> i <strong>Total</strong> warunkowane zmienną <strong>Wiek.</strong></p>
 <div>
 <details>
@@ -763,8 +764,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="wynik-total-a-wiek." class="level4">
-<h4 class="anchored" data-anchor-id="wynik-total-a-wiek.">3.1.2.1. Wynik total a wiek.</h4>
+<section id="wynik-total-a-wiek." class="level3">
+<h3 class="anchored" data-anchor-id="wynik-total-a-wiek.">4.2.1. Wynik total a wiek.</h3>
 <p>Przypatrując się rozkładom zmiennej <strong>Total</strong> widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej <strong>Total</strong> warunkowanej <strong>Wiekiem.</strong> Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku. Potwierdza się to w danych z poniższej tabeli.</p>
 <div class="cell" data-layout-align="center">
 <details>
@@ -876,8 +877,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="masa-a-wiek." class="level4">
-<h4 class="anchored" data-anchor-id="masa-a-wiek.">3.1.2.2. Masa a wiek.</h4>
+<section id="masa-a-wiek." class="level3">
+<h3 class="anchored" data-anchor-id="masa-a-wiek.">4.2.2. Masa a wiek.</h3>
 <p>Patrząc zaś na boxploty opisujące <strong>masę</strong> zawodnika widzimy wiele wartości skrajnych większych niż <span class="math inline">\(Q_3 + 1,5\,\text{IQR}\)</span> co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Potwierdza się to w poniższej tabeli. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się <strong>kategorie wagowe</strong> aby zwodnicy konkurowali z rywalami do siebie podobnymi<strong>.</strong> Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.</p>
 <div class="cell" data-layout-align="center">
 <details>
@@ -991,11 +992,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 </section>
-</section>
 <section id="analiza-zależności" class="level1">
-<h1>4. Analiza zależności</h1>
+<h1>5. Analiza zależności</h1>
 <section id="zależność-pomiędzy-masą-a-wynikiem-total." class="level2">
-<h2 class="anchored" data-anchor-id="zależność-pomiędzy-masą-a-wynikiem-total.">4.1 Zależność pomiędzy masą a wynikiem total.</h2>
+<h2 class="anchored" data-anchor-id="zależność-pomiędzy-masą-a-wynikiem-total.">5.1 Zależność pomiędzy masą a wynikiem total.</h2>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
@@ -1087,7 +1087,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="podsumowanie" class="level1">
-<h1>5. Podsumowanie</h1>
+<h1>6. Podsumowanie</h1>
 <p>W wyniku powyższej analizy doszliśmy do następujących wniosków</p>
 <ul>
 <li><p>Rozkłady wyników siłowych dla poszczególnych płci cechują się <strong>bimodalnością.</strong> Nie byliśmy w stanie stwierdzić z czego ona wynika lecz przypuszczamy, że może mieć związek z grupą zawodników, którym nie udało się uzyskać poprawnego podejścia do któregoś z bojów przez co uzyskali oni wynik znacznie niższy niż większość.</p></li>

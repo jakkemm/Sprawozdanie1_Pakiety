@@ -170,7 +170,7 @@ knitr::kable(stats)
 
 ```
 
-## 2.3 Zmienna: *Waga zawodnika*
+## 3.3 Zmienna: *Waga zawodnika*
 
 Dla tej zmiennej ciągłej można już przeprowadzić szereg analiz statystycznych oraz narysować wykres pudełkowy.
 
@@ -211,7 +211,7 @@ knitr::kable(summary_df)
 
 Wartość mediany jest zbliżona do wartości średniej, co wskazuje na dość dużą symetryczność rozkładu. Brak ich pokrycia wynika z istnienia wartości odstających. Skośność większa od 0 wskazuje na prawoskośność, co zgadza się z wnioskami odnośnie histogramu oraz jego wyglądem. Kurtoza nadwyżkowa większa od 0 oznacza, że rozkład jest leptokurtyczny. Istnieje jednak wiele podobieństw pomiędzy rozkładem mas zawodników oraz rozkładem normalnym. Rozbieżność występuje prawdopodobnie ze względu na niestandardowe warunki, którymi są zawody w trójboju siłowym. Zbiorem danych są sportowcy, a nie losowa grupa ludzi, przez co rozkład masy zawodników może bardziej różnić się od rozkładu normalnego, niż losowa próba z populacji.
 
-## 2.4 Zmienna: Łączny wynik
+## 3.4 Zmienna: Łączny wynik
 
 ```{r}
 #| code-fold: true
@@ -244,9 +244,9 @@ summary_df <- data.frame(
 knitr::kable(summary_df)
 ```
 
-## 3.1. Rozkłady warunkowe
+# 4. Rozkłady warunkowe
 
-### 3.1.1. Rozkłady zmiennych warunkowane płcią
+## 4.1. Rozkłady zmiennych warunkowane płcią
 
 Na wykresach poniżej znajdują się rozkłady zmiennych **Masa** oraz **Total** warunkowane zmienną **Płeć.** Z wykresów możemy zauważyć ewidentną **bimodalność** zmiennej **Total** dla określonej płci.
 
@@ -269,7 +269,7 @@ ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-### 3.1.2. Rozkłady zmiennych warunkowane wiekiem.
+## 4.2. Rozkłady zmiennych warunkowane wiekiem.
 
 Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych **Masa** i **Total** warunkowane zmienną **Wiek.**
 
@@ -290,7 +290,7 @@ ggplot(probka, aes(x = wiek, y = total, fill = wiek)) +
   theme_minimal()
 ```
 
-#### 3.1.2.1. Wynik total a wiek.
+### 4.2.1. Wynik total a wiek.
 
 Przypatrując się rozkładom zmiennej **Total** widzimy, że górne wąsy są znacznie dłuższe od dolnych oraz, że mediana jest bliżej pierwszego kwartyla. Dodatkowo różnice te zdają się narastać z wiekiem. Możemy zatem wywnioskować znaczną prawostronną skośność zmiennej **Total** warunkowanej **Wiekiem.** Dodatkowo skośność ta zwiększa się wraz ze wzrostem wieku. Potwierdza się to w danych z poniższej tabeli.
 
@@ -305,7 +305,7 @@ stats <- probka %>% group_by(wiek) %>% summarize(Skosnosc = skewness(total), Kur
 knitr::kable(stats)
 ```
 
-#### 3.1.2.2. Masa a wiek.
+### 4.2.2. Masa a wiek.
 
 Patrząc zaś na boxploty opisujące **masę** zawodnika widzimy wiele wartości skrajnych większych niż $Q_3 + 1,5\,\text{IQR}$ co jest przesłanką ku leptokurtyczności rozkładów warunkowych. Potwierdza się to w poniższej tabeli. Zjawisko to ma prostą interpretację. Otóż we wszystkich zawodach trójbojowych stosuje się **kategorie wagowe** aby zwodnicy konkurowali z rywalami do siebie podobnymi**.** Ostatnią kategorią są zazwykle kategorie typu 120+, 140+, które nie posiadają kresu górnego. Tym samym u tych zawodników optymalne jest posiadanie jak największej masy ciała aby zyskać przewagę nad rywalami. Powoduje to częste występowanie wartości skrajnych. Z wykresu widzimy, że intensywność obserwacji wartości skrajnych jest największa u młodszych zawodników, mniej więcej do 35-tego roku życia. To również ma oczywistą interpretację. Zawodnikom młodszym łatwiej jest niż starszym nabrać duże ilości masy ciała jednocześnie zachowując odpowiednią atletyczność celem uzyskiwania jak najlepszych wyników.
 
@@ -320,9 +320,9 @@ stats <- probka %>% group_by(wiek) %>% summarize(Skosnosc = skewness(masa), Kurt
 knitr::kable(stats)
 ```
 
-# 4. Analiza zależności
+# 5. Analiza zależności
 
-## 4.1 Zależność pomiędzy masą a wynikiem total.
+## 5.1 Zależność pomiędzy masą a wynikiem total.
 
 ```{r}
 #| code-fold: true
@@ -377,7 +377,7 @@ print(cor_total)
 
 Na podstawie powyższych wartości można stwierdzić, że istnieją przesłanki ku stwierdzeniu dodatniej korelacji pomiędzy masą ciała zawodnika a jego wynikami siłowymi niezależnie od płci.
 
-# 5. Podsumowanie
+# 6. Podsumowanie
 
 W wyniku powyższej analizy doszliśmy do następujących wniosków
 
