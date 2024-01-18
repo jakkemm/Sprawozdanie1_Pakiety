@@ -1,0 +1,87 @@
+---
+title: "Analiza wyników w trójboju"
+author: "Emil Olszewski, Jakub Kempa"
+date: 2024-01-17
+format: html
+editor: visual
+---
+
+# 1. Wstęp
+
+Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. [Dane](https://gitlab.com/openpowerlifting/opl-data) zostały udostępnione na warunkach licencji **GNU AGPLv3.** Głównymi zmiennymi, które będą nas interesować są **Age, Sex** (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe **BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg** i **TotalKg,** które wyrażają masę ciała zawodnika, wyniki w poszcególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+
+## 1.1 Pytania badawcze
+
+W ramach analizy postaramy się odpowiedzieć na następujące pytania:
+
+1.   Czy istnieje zależność między wagą a wynikami w poszczególnych bojach?
+
+2.   Jakie parametry opisują rozkłady poszczególnych zmiennych?
+
+3.   W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od płci?
+
+## Ładowanie danych 
+
+Wpierw przystąpimy do załadowania potrzebnych bibliotek
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(readxl)
+```
+
+You can add options to executable code like this
+
+```{r}
+dane <- read_excel("./dane.xlsx")
+```
+
+Jak widać mamy doczynienia z bardzo dużym zbiorem danych.
+
+```{r}
+dim(dane)
+```
+
+Tym samym w celu dalszej analizy wygenerujemy losową próbkę o długości 5000
+
+```{r}
+probka <- sample_n(dane, 5000)
+```
+
+Tak się prezentuje 10 początkowych obserwacji
+
+```{r}
+head(probka)
+```
+
+Interesować nas będą tylko zmienne **Age, Sex, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg**
+
+```{r}
+
+probka <- probka[, c("Age", "Sex", "BodyweightKg", "Best3BenchKg", "Best3SquatKg", "Best3DeadliftKg", "TotalKg")]
+
+summary(probka)
+```
+
+Napotykamy pierwszy problem. Wszystkie zmienne są typu `character`, gdy powinny być typu
+
+-   `numeric` dla **Age, BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg, TotalKg**
+
+-   `factor` dla **Sex**
+
+Dokonajmy więc konwersji
+
+```{r}
+probka$Age             <- as.numeric(probka$Age)
+probka$BodyweightKg    <- as.numeric(probka$Age)
+probka$Best3BenchKg    <- as.numeric(probka$Best3BenchKg)
+probka$Best3SquatKg    <- as.numeric(probka$Best3SquatKg)
+probka$Best3DeadliftKg <- as.numeric(probka$Best3DeadliftKg)
+probka$TotalKg         <- as.numeric(probka$TotalKg)
+
+probka$Sex             <- as.factor(probka$Sex)
+```
+
+```{r}
+summary(probka)
+```
