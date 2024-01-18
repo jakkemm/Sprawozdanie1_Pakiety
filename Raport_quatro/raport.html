@@ -110,32 +110,166 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="wstęp" class="level1">
 <h1>1. Wstęp</h1>
-<p>Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. <a href="https://gitlab.com/openpowerlifting/opl-data">Dane</a> zostały udostępnione na warunkach licencji <strong>GNU AGPLv3.</strong> Głównymi zmiennymi, które będą nas interesować są <strong>Age, Sex</strong> (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe <strong>BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg</strong> i <strong>TotalKg,</strong> które wyrażają masę ciała zawodnika, wyniki w poszcególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.</p>
+<p>Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. <a href="https://gitlab.com/openpowerlifting/opl-data">Dane</a> zostały udostępnione na warunkach licencji <strong>GNU AGPLv3.</strong> Głównymi zmiennymi, które będą nas interesować są <strong>AgeClass</strong> (zmienne kategoryczna określająca przedział wiekowy zawodnika) oraz zmienne ciągłe <strong>BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg</strong> i <strong>TotalKg,</strong> które wyrażają masę ciała zawodnika, wyniki w poszcególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.</p>
 <section id="pytania-badawcze" class="level2">
 <h2 class="anchored" data-anchor-id="pytania-badawcze">1.1 Pytania badawcze</h2>
 <p>W ramach analizy postaramy się odpowiedzieć na następujące pytania:</p>
 <ol type="1">
 <li><p>Czy istnieje zależność między wagą a wynikami w poszczególnych bojach?</p></li>
 <li><p>Jakie parametry opisują rozkłady poszczególnych zmiennych?</p></li>
-<li><p>W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od płci?</p></li>
+<li><p>W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od wieku?</p></li>
 </ol>
 </section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section id="ładowanie-danych" class="level2">
+<h2 class="anchored" data-anchor-id="ładowanie-danych">Ładowanie danych</h2>
+<p>Wpierw przystąpimy do załadowania potrzebnych bibliotek</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: pakiet 'ggplot2' został zbudowany w wersji R 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
 <p>You can add options to executable code like this</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dane <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../menpowerlifting.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Jak widać mamy doczynienia z bardzo dużym zbiorem danych.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code>[1] 158266     41</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+<p>Tym samym w celu dalszej analizy wygenerujemy losową próbkę o długości 5000</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dane, <span class="dv">5000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Tak się prezentuje 10 początkowych obserwacji</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      Name Sex Event Equipment  Age AgeClass BirthYearClass
+1           Mahzyar Ansari   M   SBD       Raw 17.5    18-19          14-18
+2            Devin Goodkin   M   SBD       Raw 19.5    20-23          19-23
+3              Leo Walhout   M   SBD       Raw   NA                        
+4 Jean Christophe Quessard   M   SBD       Raw 23.0    20-23          24-39
+5      Patryk Marek Zapala   M   SBD       Raw   NA    20-23          19-23
+6               Dan Bernal   M   SBD       Raw 66.0    65-69          60-69
+       Division BodyweightKg WeightClassKg Squat1Kg Squat2Kg Squat3Kg Squat4Kg
+1   Sub-Juniors        73.90            74      185    195.0   -202.5       NA
+2         MR-Jr        81.30            83      175    182.5   -190.0       NA
+3          Open        91.60            93      185    190.0    195.0       NA
+4       Seniors        73.33            74      120    127.5    140.0       NA
+5 Juniors 19-23        90.45            93      180    190.0    200.0       NA
+6 Masters 65-69        71.70            75      110    115.0   -120.0       NA
+  Best3SquatKg Bench1Kg Bench2Kg Bench3Kg Bench4Kg Best3BenchKg Deadlift1Kg
+1        195.0    105.0    110.0    112.5       NA        112.5       190.0
+2        182.5    112.5    122.5   -130.0       NA        122.5       205.0
+3        195.0     80.0     85.0     90.0       NA         90.0       212.5
+4        140.0     95.0   -105.0    110.0       NA        110.0       160.0
+5        200.0   -130.0   -130.0    130.0       NA        130.0       250.0
+6        115.0     80.0     87.5     95.0       NA         95.0       140.0
+  Deadlift2Kg Deadlift3Kg Deadlift4Kg Best3DeadliftKg TotalKg Place   Dots
+1       202.5      -205.0          NA           202.5   510.0     1 369.39
+2       212.5      -217.5          NA           212.5   517.5     5 353.50
+3       217.5       225.0          NA           225.0   510.0    22 326.89
+4      -165.0       165.0          NA           165.0   415.0     1 302.10
+5       270.0      -278.0          NA           270.0   600.0     1 386.99
+6       145.0       148.5          NA           148.5   358.5     1 264.91
+   Wilks Glossbrenner Goodlift Tested Country State Federation ParentFederation
+1 367.20       355.03    74.93    Yes    Iran          AsianPF              IPF
+2 349.77       336.77    72.39    Yes     USA    MO      USAPL              IPF
+3 322.73       309.07    67.22    Yes                  KNKF-SP              IPF
+4 300.46       290.60    61.21    Yes                  FFForce              IPF
+5 382.07       366.10    79.57    Yes                      NSF              IPF
+6 263.85       255.43    53.50    Yes     USA    CA       USPA              IPL
+        Date MeetCountry MeetState    MeetTown
+1 2017-12-04       India                Kerala
+2 2016-12-10         USA        IL            
+3 2016-12-11 Netherlands        NB   Veldhoven
+4 2019-05-18      France           Blanquefort
+5 2015-12-19      Norway                 Askim
+6 2022-11-06         USA        CA      Upland
+                                     MeetName
+1    Asian Classic Powerlifting Championships
+2                     Beast of the Metro East
+3    Dutch Classic Powerlifting Championships
+4 Deuxième Pas FA PL DC BP Nouvelle-Aquitaine
+5                                 Klubbstevne
+6            Drug Tested Underground Showdown</code></pre>
+</div>
+</div>
+<p>Interesować nas będą tylko zmienne <strong>AgeClass, BodyWeightKg, Best3BenchKg, Best3DeadliftKg, Best3SquatKg, TotalKg</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>probka <span class="ot">&lt;-</span> probka[, <span class="fu">c</span>(<span class="st">"AgeClass"</span>, <span class="st">"BodyweightKg"</span>, <span class="st">"Best3BenchKg"</span>, <span class="st">"Best3SquatKg"</span>, <span class="st">"Best3DeadliftKg"</span>, <span class="st">"TotalKg"</span>)]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   AgeClass          BodyweightKg     Best3BenchKg    Best3SquatKg  
+ Length:5000        Min.   : 29.50   Min.   : 15.0   Min.   : 17.0  
+ Class :character   1st Qu.: 74.00   1st Qu.:100.0   1st Qu.:150.0  
+ Mode  :character   Median : 86.05   Median :120.0   Median :180.0  
+                    Mean   : 87.89   Mean   :119.2   Mean   :178.5  
+                    3rd Qu.: 98.70   3rd Qu.:140.0   3rd Qu.:207.5  
+                    Max.   :220.00   Max.   :242.5   Max.   :372.5  
+                                     NA's   :5       NA's   :4      
+ Best3DeadliftKg    TotalKg     
+ Min.   : 35.0   Min.   : 67.0  
+ 1st Qu.:182.5   1st Qu.:437.5  
+ Median :210.0   Median :510.0  
+ Mean   :209.1   Mean   :506.7  
+ 3rd Qu.:240.0   3rd Qu.:582.5  
+ Max.   :395.0   Max.   :957.5  
+ NA's   :4                      </code></pre>
+</div>
+</div>
+<p>Napotykamy pierwszy problem. Wszystkie zmienne są typu <code>character</code>, gdy powinny być typu</p>
+<ul>
+<li><p><code>numeric</code> dla <strong>BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg, TotalKg</strong></p></li>
+<li><p><code>factor</code> dla <strong>AgeClass</strong></p></li>
+</ul>
+<p>Dokonajmy więc konwersji</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>BodyweightKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>BodyweightKg)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3BenchKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3BenchKg)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3SquatKg    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3SquatKg)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>Best3DeadliftKg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>Best3DeadliftKg)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>TotalKg         <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(probka<span class="sc">$</span>TotalKg)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>probka<span class="sc">$</span>AgeClass        <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(probka<span class="sc">$</span>AgeClass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    AgeClass     BodyweightKg     Best3BenchKg    Best3SquatKg  
+ 24-34  :1419   Min.   : 29.50   Min.   : 15.0   Min.   : 17.0  
+ 20-23  :1081   1st Qu.: 74.00   1st Qu.:100.0   1st Qu.:150.0  
+        : 817   Median : 86.05   Median :120.0   Median :180.0  
+ 18-19  : 544   Mean   : 87.89   Mean   :119.2   Mean   :178.5  
+ 16-17  : 371   3rd Qu.: 98.70   3rd Qu.:140.0   3rd Qu.:207.5  
+ 35-39  : 191   Max.   :220.00   Max.   :242.5   Max.   :372.5  
+ (Other): 577                    NA's   :5       NA's   :4      
+ Best3DeadliftKg    TotalKg     
+ Min.   : 35.0   Min.   : 67.0  
+ 1st Qu.:182.5   1st Qu.:437.5  
+ Median :210.0   Median :510.0  
+ Mean   :209.1   Mean   :506.7  
+ 3rd Qu.:240.0   3rd Qu.:582.5  
+ Max.   :395.0   Max.   :957.5  
+ NA's   :4                      </code></pre>
+</div>
+</div>
 </section>
 </section>
 
