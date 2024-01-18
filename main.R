@@ -4,7 +4,7 @@ library(readxl)
 library(ggplot2)
 
 #wpisz sobie swój path
-data = read_excel("dane.xlsx")
+data = read_excel("Sprawozdanie PDF/dane.xlsx")
 
 # Próbka danych
 head(data)
