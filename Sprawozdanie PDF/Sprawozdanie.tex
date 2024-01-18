@@ -61,15 +61,49 @@
 \maketitle
 
 % ------------------- STRESZCZENIE --------------------------
-%\begin{abstract}
+\begin{abstract}
 
 Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat 
 męskich trójboistów zrzeszonych w ramach federacji IPF. \href{https://gitlab.com/openpowerlifting/opl-data}{Dane} zostały udostępnione na warunkach licencji GNU AGPLv3. 
-Głównymi zmiennymi, które będą nas interesować będą \textit{Age}, \textit{Sex} (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe \textit{Best3BenchKg}, \textit{Best3SquatKg}, \textit{Best3DeadliftKg} i \textit{TotalKg}, które wyrażają wyniki w poszczególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+Głównymi zmiennymi, które będą nas interesować będą \textit{Age}, \textit{Sex} (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe \textit{BodyweightKg} oraz \textit{TotalKg}, które wyrażają odpowiednio masę ciała zawodnika oraz wynik całkowity, będący sumą wyników w trzech kategoriach: \textit{wyciskanie na ławce, przysiad ze sztangą, martwy ciąg}.
 
-%\end{abstract}
-
-%\section{Aparatura}
 Do analizy danych użyto języka \textit{R}.
+
+\end{abstract}
+
+\section{Opis danych} 
+Pod uwagę wzięto tylko zawodników płci męskiej, dla których dostępny był pełen zestaw danych dotyczący wyników uzyskanych w każdym z trzech bojów. Ograniczono się dodatkowo do cenzusu wiekowego w przedziale od 16 do 40 lat oraz rozpatrywano tylko wyniki uzyskane w kategorii RAW (kategoria, która zabrania używania sprzętu dającego przewagę mechaniczną np. koszulek do wyciskania, kaftanów itd. Jest to klasyczna kategoria trójboju siłowego). \\
+Skoncentrowano się na sześciu kluczowych zmiennych:
+
+    \begin{itemize}
+        \item \textbf{Age (wiek zawodnika)}: Ta zmienna kategoryczna reprezentuje wiek zawodnika zawodnika. Choć intuicynie może się wydawać, że jest ona bardzo istotna (wraz z wiekiem witalność sportowa powinna spadać), tak jednak w weightliftingu wiek nie jest kluczowy. Wykażą to późniejsze analizy w sprawozdaniu.
+        \item \textbf{Sex (płeć zawodnika)}: Płeć jako zmienna kategoryczna naturalnie istotnie wpływa na wyniki. Kobiety nie będą osiągać tak samo wysokich wyników, w tych samych kategoriach, co mężczyźni. Nasza analiza będzie skupiać się jedynie na mężczyznach.
+        \item \textbf{BodyweightKg (masa ciała zawodnika)}: Ta zmienna ciągła reprezentuje masę ciała zawodnika w kilogramach. Masa ciała jest istotnym parametrem w trójboju siłowym, ponieważ klasyfikuje zawodników w odpowiednie kategorie wagowe i może wpływać na ich wydajność w zawodach.
+        \item \textbf{TotalKg (Całkowity wynik)}: Jako zmienna ciągła, całkowity wynik odnosi się do sumy maksymalnych ciężarów, które zawodnik podniósł w trzech próbach: przysiadzie, wyciskaniu leżąc i martwym ciągu. Jest to główny wskaźnik wydajności w trójboju siłowym, odzwierciedlający siłę i umiejętności zawodnika. W dalszej części raportu będziemy używać określeń takich jak \textbf{Wynik sumaryczny}, \textbf{Wynik total} czy po prostu \textbf{total}.
+    \end{itemize}
+     
+Wiersze, w których w naszych kategoriach pojawiają się braki danych usuwamy. Postanowiliśmy z otrzymanych danych wydzielić losową próbę o długości 1500. Poniżej zamieszczone są informacje o naszych danych.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --\\\#\# v dplyr \ \ \ \ 1.1.3 \ \ \ \ v readr \ \ \ \ 2.1.4\\\#\# v forcats \ \ 1.0.0 \ \ \ \ v stringr \ \ 1.5.0\\\#\# v ggplot2 \ \ 3.4.3 \ \ \ \ v tibble \ \ \ 3.2.1\\\#\# v lubridate 1.9.3 \ \ \ \ v tidyr \ \ \ \ 1.3.0\\\#\# v purrr \ \ \ \ 1.0.2 \ \ \ \ \\\#\# -- Conflicts ------------------------------------------ tidyverse\_conflicts() --\\\#\# x dplyr::filter() masks stats::filter()\\\#\# x dplyr::lag() \ \ \ masks stats::lag()\\\#\# i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors\\\#\# \\\#\# Attaching package: 'dbplyr'\\\#\# \\\#\# \\\#\# The following objects are masked from 'package:dplyr':\\\#\# \\\#\# \ \ \ \ ident, sql}}\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##       Age         BodyweightKg       TotalKg     
+##  Min.   : 8.00   Min.   : 29.85   Min.   : 97.5  
+##  1st Qu.:19.00   1st Qu.: 74.20   1st Qu.:440.0  
+##  Median :23.00   Median : 85.62   Median :510.0  
+##  Mean   :25.61   Mean   : 87.85   Mean   :511.5  
+##  3rd Qu.:30.00   3rd Qu.: 98.00   3rd Qu.:587.5  
+##  Max.   :72.00   Max.   :196.10   Max.   :925.0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
 
 \end{document}

@@ -15,11 +15,43 @@
 
 Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat 
 męskich trójboistów zrzeszonych w ramach federacji IPF. \href{https://gitlab.com/openpowerlifting/opl-data}{Dane} zostały udostępnione na warunkach licencji GNU AGPLv3. 
-Głównymi zmiennymi, które będą nas interesować będą \textit{Age}, \textit{Sex} (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe \textit{Best3BenchKg}, \textit{Best3SquatKg}, \textit{Best3DeadliftKg} i \textit{TotalKg}, które wyrażają wyniki w poszczególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+Głównymi zmiennymi, które będą nas interesować będą \textit{Age}, \textit{Sex} (zmienne kategoryczne określające wiek i płeć zawodnika) oraz zmienne ciągłe \textit{BodyweightKg} oraz \textit{TotalKg}, które wyrażają odpowiednio masę ciała zawodnika oraz wynik całkowity, będący sumą wyników w trzech kategoriach: \textit{wyciskanie na ławce, przysiad ze sztangą, martwy ciąg}.
+
+Do analizy danych użyto języka \textit{R}.
 
 \end{abstract}
 
-%\section{Aparatura}
-Do analizy danych użyto języka \textit{R}.
+\section{Opis danych} 
+Pod uwagę wzięto tylko zawodników płci męskiej, dla których dostępny był pełen zestaw danych dotyczący wyników uzyskanych w każdym z trzech bojów. Ograniczono się dodatkowo do cenzusu wiekowego w przedziale od 16 do 40 lat oraz rozpatrywano tylko wyniki uzyskane w kategorii RAW (kategoria, która zabrania używania sprzętu dającego przewagę mechaniczną np. koszulek do wyciskania, kaftanów itd. Jest to klasyczna kategoria trójboju siłowego). \\
+Skoncentrowano się na sześciu kluczowych zmiennych:
+
+    \begin{itemize}
+        \item \textbf{Age (wiek zawodnika)}: Ta zmienna kategoryczna reprezentuje wiek zawodnika zawodnika. Choć intuicynie może się wydawać, że jest ona bardzo istotna (wraz z wiekiem witalność sportowa powinna spadać), tak jednak w weightliftingu wiek nie jest kluczowy. Wykażą to późniejsze analizy w sprawozdaniu.
+        \item \textbf{Sex (płeć zawodnika)}: Płeć jako zmienna kategoryczna naturalnie istotnie wpływa na wyniki. Kobiety nie będą osiągać tak samo wysokich wyników, w tych samych kategoriach, co mężczyźni. Nasza analiza będzie skupiać się jedynie na mężczyznach.
+        \item \textbf{BodyweightKg (masa ciała zawodnika)}: Ta zmienna ciągła reprezentuje masę ciała zawodnika w kilogramach. Masa ciała jest istotnym parametrem w trójboju siłowym, ponieważ klasyfikuje zawodników w odpowiednie kategorie wagowe i może wpływać na ich wydajność w zawodach.
+        \item \textbf{TotalKg (Całkowity wynik)}: Jako zmienna ciągła, całkowity wynik odnosi się do sumy maksymalnych ciężarów, które zawodnik podniósł w trzech próbach: przysiadzie, wyciskaniu leżąc i martwym ciągu. Jest to główny wskaźnik wydajności w trójboju siłowym, odzwierciedlający siłę i umiejętności zawodnika. W dalszej części raportu będziemy używać określeń takich jak \textbf{Wynik sumaryczny}, \textbf{Wynik total} czy po prostu \textbf{total}.
+    \end{itemize}
+     
+Wiersze, w których w naszych kategoriach pojawiają się braki danych usuwamy. Postanowiliśmy z otrzymanych danych wydzielić losową próbę o długości 1500. Poniżej zamieszczone są informacje o naszych danych.
+
+<<echo=FALSE, results="hide">>=
+library(tidyverse)
+library(modeldata)
+library(readxl)
+library(dbplyr)
+
+data <-  read_excel("dane.xlsx")
+dropped_data <- data[, c("Age","BodyweightKg", "TotalKg")] %>% drop_na()
+sample_data <- dropped_data %>% slice_sample(n=1500, replace=FALSE)
+
+sample_data$Age <- as.integer(sample_data$Age)
+sample_data$BodyweightKg <- as.numeric(sample_data$BodyweightKg)
+sample_data$TotalKg <- as.numeric(sample_data$TotalKg)
+@
+<<echo=FALSE>>=
+summary(sample_data)
+@
+
+
 
 \end{document}
