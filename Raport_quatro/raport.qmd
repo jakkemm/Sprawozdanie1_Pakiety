@@ -3,12 +3,21 @@ title: "Analiza wyników w trójboju siłowym \n Raport 1. Pakiety statystyczne"
 author: "Emil Olszewski, Jakub Kempa"
 date: 2024-01-17
 format: 
-  html:
-    page-layout: full
-    grid:
-      sidebar-width: 100px
-      margin-width: 100px
-      body-width: 1200px
+  pdf:
+    keep-tex: true
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+include-before-body:
+  text: |
+    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+      showspaces = false,
+      showtabs = false,
+      breaksymbolleft={},
+      breaklines
+      % Note: setting commandchars=\\\{\} here will cause an error 
+    }
 knitr:
   opts_chunk:
     fig.align: center
@@ -128,6 +137,7 @@ Dla tej zmiennej występują tylko dwie wartości *M, F*, oznaczające płeć za
 #| layout-ncol: 2
 #| fig-cap: "Histogram zmiennej - Płeć"
 #| tbl-cap: "Tabela przedstawiająca liczność i procent pod względem płci"
+
 
 ggplot(probka, aes(x = plec, y = ..count.., fill = ..count..)) +
   geom_bar(color = "black", alpha = 0.7, position = "identity") +
@@ -260,6 +270,8 @@ Na wykresach poniżej znajdują się rozkłady zmiennych **Masa** oraz **Total**
 #| code-fold: true
 #| warning: false
 #| layout-ncol: 2
+#| fig-cap: "Histogramy masy zawodnika i jego wyniku dla poszczególnych płci"
+#| fig-subcap: ["Masa", "Total"]
 ggplot(probka, aes(x = masa, y = ..density.., fill = ..density..)) +
   geom_histogram(binwidth = 7, color = "black", alpha = 0.7, position = "identity") +
   ggtitle("Histogram - Masa") +
@@ -283,6 +295,8 @@ Na poniższych wykresach pudełkowych przedstawione są rozkłady zmiennych **Ma
 #| code-fold: true
 #| warning: false
 #| layout-ncol: 2
+#| fig-cap: "Wykresy pudełkowe masy zawodnika i jego wyniku dla poszczególnych przedziałów"
+#| fig-subcap: ["Masa", "Total"]
 ggplot(probka, aes(x = wiek, y = masa, fill = wiek)) +
   geom_boxplot() +
   ggtitle("Wykresy pudełkowe masy warunkowanej wiekiem") +
@@ -333,6 +347,7 @@ knitr::kable(stats)
 ```{r}
 #| code-fold: true
 #| warning: false
+#| fig-cap: "Wykres rozproszenia wyniku total względem masy"
 
 ggplot(probka, aes(x = masa, y = total, color = plec)) +
   geom_point(size = 1) +
@@ -344,8 +359,9 @@ ggplot(probka, aes(x = masa, y = total, color = plec)) +
 Celem lepszej analizy zależności dokonamy teraz uśrednienia zmiennej **Total** po zawodnikach tej samej płci o tej samej masie.
 
 ```{r}
-#| code-fold: true 
+#| code-fold: true
 #| warning: false
+#| fig-cap: "Wykres rozproszenia po uśrednieniu po masie" 
 probka_mean <- probka %>%
   group_by(masa, plec) %>%
   mutate(mean_total = mean(total))
@@ -365,7 +381,7 @@ ggplot(probka_mean_unique, aes(x = masa, y = mean_total, color = plec)) +
 Współczynniki korelacji pearsona dla całej populacji oraz dla każdej płci z osobna prezentują się następująco.
 
 ```{r}
-#| code-fold: true 
+#| code-fold: true
 cor_by_plec <- probka_mean_unique %>%
   group_by(plec) %>%
   summarize(correlation = cor(masa, total, use = "complete.obs"))
