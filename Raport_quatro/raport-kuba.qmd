@@ -1,0 +1,222 @@
+---
+title: "Analiza wyników w trójboju"
+author: "Emil Olszewski, Jakub Kempa"
+date: 2024-01-17
+format: 
+  html:
+    page-layout: full
+editor: visual
+---
+
+# 1. Wstęp
+
+Przedmiotem analizy są dane ze zbioru zawierającego informacje na temat trójboistów zrzeszonch w ramach federacji IPF. [Dane](https://gitlab.com/openpowerlifting/opl-data) zostały udostępnione na warunkach licencji **GNU AGPLv3.** Głównymi zmiennymi, które będą nas interesować są **AgeClass** (zmienne kategoryczna określająca przedział wiekowy zawodnika) oraz zmienne ciągłe **BodyweightKg, Best3BenchKg, Best3SquatKg, Best3DeadliftKg** i **TotalKg,** które wyrażają masę ciała zawodnika, wyniki w poszcególnych bojach (wyciskanie na ławce, przysiad ze sztangą oraz martwy ciąg), jak i wynik całkowity.
+
+## 1.1 Pytania badawcze
+
+W ramach analizy postaramy się odpowiedzieć na następujące pytania:
+
+1.  Czy istnieje zależność między wagą a wynikami w poszczególnych bojach?
+
+2.  Jakie parametry opisują rozkłady poszczególnych zmiennych?
+
+3.  W jaki sposób różnią się rozkłady wyników oraz wagi w zależności od wieku?
+
+## 1.2 Ładowanie danych
+
+Wpierw przystąpimy do załadowania potrzebnych bibliotek
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(e1071)
+```
+
+Aby załączyć nasze dane musimy rozważyć w jaki sposób w naszych danych przedstawiony jest *brak danych*. W naszym pliku csv taki rekord to po prostu brak danych w wierszu.
+
+```{r}
+probka <- read.csv("../powerlifting.csv", na.strings = "")
+```
+
+Tak się prezentuje 10 początkowych obserwacji
+
+```{r}
+head(probka)
+```
+
+Interesować nas będą tylko zmienne **Sex,** **AgeClass, BodyWeightKg** i **TotalKg**
+
+```{r}
+
+probka <- probka[, c("Sex", "AgeClass", "BodyweightKg", "TotalKg")]
+
+summary(probka)
+```
+
+Napotykamy pierwszy problem. Wszystkie zmienne są typu `character`, gdy powinny być typu
+
+-   `numeric` dla **BodyweightKg, TotalKg**
+
+-   `factor` dla **Sex, AgeClass**
+
+Dokonajmy więc konwersji
+
+```{r}
+probka$BodyweightKg    <- as.numeric(probka$BodyweightKg)
+probka$TotalKg         <- as.numeric(probka$TotalKg)
+
+probka$Sex             <- as.factor(probka$Sex)
+probka$AgeClass        <- as.factor(probka$AgeClass)
+```
+
+```{r}
+summary(probka)
+```
+
+Dokonamy teraz zmiany nazw kolumn na bardziej przystępne
+
+```{r}
+colnames(probka) <- c("plec", "wiek", "masa", "total")
+head(probka)
+```
+
+Nasze dane mają również rekordy z brakiem danych, zatem kolejnym krokiem jest usunięcie wierszy, w których takie braki się pojawiają.
+
+```{r}
+probka <- probka %>% drop_na()
+```
+
+Dzięki temu otrzymujemy zestaw danych, który swobodnie może być poddawanym analizom.
+
+# 2. Analiza jednowymiarowa
+
+W tej części zajmiemy się analizą statystyczną wybranych przez nas kategorii. Zmienne kategoryczne mają ograniczone możliwości co do analizy, dlatego ograniczymy się do histogramu i przedstawienia liczności.
+
+## 2.1 Zmienna: *Płeć*
+
+Dla tej zmiennej występują tylko dwie wartości *M, F*, oznaczające płeć zawodnika/zawodniczki. Przewaga mężczyzn nie jest zaskakująca.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| layout-ncol: 3
+#| fig-cap: "Histogram zmiennej - Płeć"
+#| tbl-cap: "Tabela przedstawiająca liczność i procent pod względem płci"
+
+ggplot(probka, aes(x = plec, y = ..count.., fill = ..count..)) +
+  geom_bar(color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Płeć") + 
+  theme_minimal()
+
+
+
+plec <- table(probka$plec)
+procent_danych <-  round(prop.table(plec) * 100, digits=2)
+stats <- data.frame(Plec = as.character(names(plec)), Licznosc = as.numeric(plec), Procent = as.numeric(procent_danych))
+
+knitr::kable(stats)
+```
+
+## 2.2 Zmienna: *Kategoria wiekowa*
+
+Występuje tutaj 16 różnych wartości, przypisujących danego zawodnika do danej kategorii. Najwięcej osób startuje w kategorii wiekowej *24-34*, co stanowi ok. 29% wszystkich zawodników. Kategorię *80-999* należy rozumieć jako osoby w wieku $\ge 80$
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| layout-ncol: 2
+#| fig-cap: "Histogram zmiennej - Kategoria wiekowa"
+#| tbl-cap: "Tabela przedstawiająca liczność i procent dla danej kategorii wiekowej"
+
+ggplot(probka, aes(x = wiek, y = ..count.., fill = ..count..)) +
+  geom_bar(color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Histogram - Kategoria wiekowa") + 
+  theme_minimal()
+
+wiek_ilosc <- table(probka$wiek)
+procent_danych <-  round(prop.table(wiek_ilosc) * 100, digits=2)
+stats <- data.frame(Wiek = as.character(names(wiek_ilosc)), Licznosc = as.numeric(wiek_ilosc), Procent = as.numeric(procent_danych))
+
+knitr::kable(stats)
+
+```
+
+## 2.3 Zmienna: *Waga zawodnika*
+
+Dla tej zmiennej ciągłej można już przeprowadzić szereg analiz statystycznych oraz narysować wykres pudełkowy.
+
+```{r}
+#| code-fold: true
+#| fig-cap: "Wykresy dla zmiennej Masa"
+#| fig-subcap: ["Histogram", "Boxplot"]
+#| layout-ncol: 2
+
+ggplot(probka, aes(x = masa, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 7, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Unormowany histogram - Masa zawodnika") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(y = masa)) +
+  geom_boxplot() +
+  ggtitle("Wykres pudełkowy masy") +
+  theme_minimal()
+
+```
+
+Na histogramie widzimy, że jest on prawostronnie skośny i prawie symetryczny. Ponadto zarówno histogram, jak i wykres pudełkowy wykazują dużą obecność tzw. outliersów, czyli wartości odstających, wywołanych niskim rozstępem międzykwartylowym. Histogram przypomina histogram rozkładu normalnego. Dodatkowo wydaje się być platykurtyczny, ze względu na swój płaski szczyt. Poniżej w tabeli przedstawione są podstawowe statystki dla tej zmiennej.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| tbl-cap: "Tabela przedstawiająca zbiór wartości poszczególnych statystyk"
+
+
+summary_df <- data.frame(
+  Statystyki = c("Minimum", "Pierwszy kwartyl", "Mediana", "Srednia", "Trzeci kwartyl", "Rozstep miedzykwartylowy", "Maximum", "Wariancja", "Skosnosc", "Kurtoza"),
+  Wartosci = c(min(probka$masa), quantile(probka$masa, 0.25), median(probka$masa), mean(probka$masa), quantile(probka$masa, 0.75), IQR(probka$masa), max(probka$masa), var(probka$masa), skewness(probka$masa), kurtosis(probka$masa))
+)
+
+knitr::kable(summary_df)
+```
+
+Wartość mediany jest zbliżona do wartości średniej, co wskazuje na dość dużą symetryczność rozkładu. Brak ich pokrycia wynika z istnienia wartości odstających. Skośność większa od 0 wskazuje na prawoskośność, co zgadza się z wnioskami odnośnie histogramu oraz jego wyglądem. Kurtoza mniejsza od 3 oznacza, że rozkład jest bardziej *płaski*, niż rozkład normalny. Istnieje jednak wiele podobieństw pomiędzy rozkładem mas zawodników oraz rozkładem normalnym. Rozbieżność (choć mała) występuje prawdopodobnie ze względu na niestandardowe warunki, którymi są zawody w trójboju siłowym. Zbiorem danych są sportowcy, a nie losowa grupa ludzi, przez co rozkład masy zawodników może bardziej różnić się od rozkładu normalnego, niż losowa próba z populacji. Dodatkowo, sportowcy biorący udział w trójboju często zwiększają swoją masę dla przewagi nad innymi zawodnikami w swojej kategorii wagowej, co również przyczynia się do odchylenia tego rozkładu od rozkładu normalnego.
+
+## 2.4 Zmienna: Łączna masa
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| layout-ncol: 2
+#| fig-cap: "Wykresy dla zmiennej Total"
+#| fig-subcap: ["Histogram", "Boxplot"]
+
+ggplot(probka, aes(x = total, y = ..density.., fill = ..density..)) +
+  geom_histogram(binwidth = 20, color = "black", alpha = 0.7, position = "identity") +
+  ggtitle("Unormowany histogram - Suma wszystkich podniesionych ciężarów") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+ggplot(probka, aes(y = total)) +
+  geom_boxplot() +
+  ggtitle("Wykres pudełkowy wyniku total") +
+  theme_minimal()
+
+```
+
+Na
+
+```{r}
+#| code-fold: true
+#| tbl-cap: "Tabela przedstawiająca zbiór wartości poszczególnych statystyk"
+
+summary_df <- data.frame(
+  Statystyki = c("Minimum", "Pierwszy kwartyl", "Mediana", "Srednia", "Trzeci kwartyl", "Rozstep miedzykwartylowy", "Maximum", "Wariancja", "Skosnosc", "Kurtoza"),
+  Wartosci = c(min(probka$total), quantile(probka$total, 0.25), median(probka$total), mean(probka$total), quantile(probka$total, 0.75), IQR(probka$total), max(probka$total), var(probka$total), skewness(probka$total), kurtosis(probka$total))
+)
+knitr::kable(summary_df)
+```
+
+Wartość mediany jest ponownie zbliżona do średniej, jednak wygląd histogramu wyklucza symetryczność rozkładu. Skośność, podobnie jak wcześniej, jest większa od 0, potwierdzając prawoskośność. Kurtoza nadwyżkowa tym razem spada poniżej zera, co oznacza platykurtyczność. W wypadku tych danych można odrzucić hipotezę o podobieństwie do rozkładu normalnego. Powodów może być kilka, przy czym najbardziej przekonującym jest zróżnicowanie. Wybieramy spośród sportowców, którzy mają różne programy treningowe, różne możliwości fizyczne, podantości na kontuzje, zdolności. Dodatkowo analizujemy tylko i wyłącznie tych, którzy konkurują w podnosieniu ciężarów. Prawdopodobnie inaczej wyglądałby wykres, gdyby móc przeanalizować dane dla *wszystkich* trójboistów - znacznie inaczej, gdyby przeanalizować również dane ludzi, którzy trójboju nie trenują. Ponadto dłuższy jest prawy ogon, ponieważ w trójboju raczej częściej będą zdarzać się jednostki wybitne, niż tragiczne. Wszyscy zadownicy są na podobnym poziomie, a jeśli już zdarzy się jakaś wartość odstająca, to raczej będzie lepsza od reszty, niż gorsza.
